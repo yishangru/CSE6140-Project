@@ -5,10 +5,12 @@ Team project for CSE6140 Gatech
 ### Local Search
 - Two Weighting Local Search for Minimum Vertex Cover (AAAI 2015) [paper link](https://dl.acm.org/doi/abs/10.5555/2887007.2887161#pill-authors__contentcon)
 - Local search with edge weighting and configuration checking heuristicsfor minimum vertex cover Cover (revised from AAAI 2010, Artificial Intelligence) [paper link](https://www.sciencedirect.com/science/article/pii/S0004370211000427)
+
 ...
 
 ### Approximation
 - Approximating the minimum vertex cover in sublinear time and a connection to distributed algorithms (Theortical Computer Science) [paper link](https://www.sciencedirect.com/science/article/pii/S0304397507003696)
+
 ...
 
 ## Python NetworkX
