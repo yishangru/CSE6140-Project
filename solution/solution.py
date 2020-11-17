@@ -1,5 +1,5 @@
 """
-Top level solution wrapper, provide data read, solution output
+Top level solution wrapper, infrastructure
 """
 import threading
 
