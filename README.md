@@ -9,13 +9,15 @@ For windows:
   cmd cd to current directory (../CSE6140-Project/)
   
   python3 -m venv env
-  env\Scripts\activate.bat
+  env\Scripts\activate.bat  # activate virtual environment
+  pip install -r dependencies.txt
 
 For linux / MacOS:
   terminal cd to current directory (../CSE6140-Project/)
   
   python3 -m venv env
-  source env/bin/activate
+  source env/bin/activate  # activate virtual environment
+  pip install -r dependencies.txt
 ```
 
 ## Paper Reference Lists
