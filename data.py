@@ -29,6 +29,8 @@ def checkData(readPath):
     meta = graph_data[0].strip().split(",")
     node_count, edge_count = int(meta[0]), int(meta[1])
 
+    graph_file.close()
+
     # check whether node number as expected
     if node_count != (len(graph_data) - 1):
         print("Node Number is " + ("smaller" if node_count < (len(graph_data) - 1) else "bigger") + " than expected!")
@@ -72,6 +74,9 @@ def readData(readPath):
     graph_data = graph_file.readlines()
     meta = graph_data[0].strip().split(",")
     node_count, edge_count = int(meta[0]), int(meta[1])
+
+    graph_file.close()
+
     for i in range(1, len(graph_data)):
         graph[i].update([int(node) for node in graph_data[i].strip().split()])
     return Graph(node=node_count, edge=edge_count, adjacent_matrix=graph)
@@ -95,3 +100,4 @@ def writeSol(writePath, vertexSet):
     solution_file = open(writePath, mode='w', encoding="utf-8")
     solution_file.write(str(len(vertexSet)) + "\n")
     solution_file.write(",".join(vertexSet) + "\n")
+    solution_file.close()
