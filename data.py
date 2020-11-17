@@ -53,5 +53,8 @@ def readData(readPath):
         graph[i].update([int(node) for node in graph_data[i].strip().split()])
     return Graph(node=node_count, edge=edge_count, adjacent_matrix=graph)
 
+# write solution vertex
 def writeSol(writePath, vertexSet):
     solution_file = open(writePath, mode='w', encoding="utf-8")
+    solution_file.write(str(len(vertexSet)) + "\n")
+    solution_file.write(",".join(vertexSet) + "\n")

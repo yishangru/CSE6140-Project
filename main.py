@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import argparse
+from data import checkData, readData, writeSol
 from solution.solution import solutionExecutor
 
 defaultProcessNum = 1
@@ -8,6 +9,8 @@ data_directory = "data/DATA/"
 
 def main():
     parser = argparse.ArgumentParser()
+    parser.add_argument('-c', '--check', type=int, required=False,
+                        help="check graph data validity")
     parser.add_argument('-l', '--lab', type=int, nargs=None, required=True,
                         help="lab number for tests to run")
     parser.add_argument('-p', '--part', type=int, nargs='?', default=None,
