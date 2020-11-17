@@ -23,7 +23,7 @@ For linux / MacOS:
 ```
 
 If you install new package to the environment, **make sure you update `dependencies.txt` with correct package name and version, and commit**. 
-Just add the main package with version to `dependencies.txt` should be fine. 
+Just add the main package with version to `dependencies.txt` should be fine. Refer to `dependencies.txt` for example dependencies. 
 
 Following shell snippet can be used to retrieve installed package lists.
 
