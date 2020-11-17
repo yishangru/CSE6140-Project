@@ -29,6 +29,8 @@ class Solution(threading.Thread):
         self.lock.release()
 
 
+from solution.networkXSol import networkXSol
+
 def solutionExecutor(graph, solution, timeLimit, parameterDict=None):
     if solution == "BB":
         pass
