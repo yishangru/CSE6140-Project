@@ -6,6 +6,5 @@ For generated adjacent graph:
 
 import os
 
-
 def readData(fileName):
     graphFile = open("data/DATA" + fileName, mode='r', encoding="utf-8")

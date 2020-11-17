@@ -2,5 +2,14 @@
 This is a solution retrieved using networkX.
 """
 
-def networkXSol(graph):
+from solution import Solution
+
+class networkXSol(Solution):
+    def __init__(self, graphDataName, timeLimit):
+        super(graphDataName, timeLimit)
+
+    def execute(self):
+        self.run()
+
+def networkXSolMain(graphDataName, timeLimit):
     pass
