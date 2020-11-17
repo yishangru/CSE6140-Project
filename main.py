@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import argparse
-from data import checkData, readData, writeSol
 from solution.solution import solutionExecutor
+from data import checkData, readData, checkSol, writeSol
 
 defaultProcessNum = 1
 data_directory = "data/DATA/"
@@ -31,5 +31,5 @@ def main():
     # write vertex set
 
 
-if __name__ == "main":
+if __name__ == "__main__":
     main()

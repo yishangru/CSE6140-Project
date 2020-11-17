@@ -11,7 +11,7 @@ Data read:
 Solution output:
     Write current best vertex solution to file
 """
-
+import copy
 import collections
 
 class Graph(object):
@@ -75,6 +75,20 @@ def readData(readPath):
     for i in range(1, len(graph_data)):
         graph[i].update([int(node) for node in graph_data[i].strip().split()])
     return Graph(node=node_count, edge=edge_count, adjacent_matrix=graph)
+
+# check solution complete
+def checkSol(graph, vertexSet):
+    copied_graph = copy.deepcopy(graph)
+    adjacent_matrix = copied_graph.adjacent_matrix
+    for vertex in vertexSet:
+        for neighbor in adjacent_matrix[vertex]:
+            adjacent_matrix[neighbor].remove(vertex)
+        adjacent_matrix.pop(vertex)
+    left_edge = sum([len(adjacent_matrix[node]) for node in adjacent_matrix.keys()])
+    if left_edge != 0:
+        print("Solution is not correct! Not all edge is covered!")
+        return False
+    return True
 
 # write solution vertex
 def writeSol(writePath, vertexSet):
