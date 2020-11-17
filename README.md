@@ -21,8 +21,8 @@ For linux / MacOS:
   pip install -r dependencies.txt
 ```
 
-If you install new package to the environment, **make sure you update `dependencies.txt` with correct package name and version**. 
-Following shell snippet can be used to retrieve installed package lists.
+If you install new package to the environment, **make sure you update `dependencies.txt` with correct package name and version, and commit**. 
+Just add the main package with version to `dependencies.txt` should be fine. Following shell snippet can be used to retrieve installed package lists.
 
 ```shell script
 pip freeze  # get current installed packages and version info
