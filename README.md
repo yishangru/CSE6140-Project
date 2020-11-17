@@ -21,6 +21,13 @@ For linux / MacOS:
   pip install -r dependencies.txt
 ```
 
+If you install new package to the environment, **make sure you update `dependencies.txt` with correct package name and version**. 
+Following shell snippet can be used to retrieve installed package lists.
+
+```shell script
+pip freeze  # get current installed packages and version info
+```
+
 ## Paper Reference Lists
 ### Local Search
 - Two Weighting Local Search for Minimum Vertex Cover (AAAI 2015) [paper link](https://dl.acm.org/doi/abs/10.5555/2887007.2887161#pill-authors__contentcon)
