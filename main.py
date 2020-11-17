@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import argparse
 
+defaultProcessNum = 1
 
 def main():
     parser = argparse.ArgumentParser()
