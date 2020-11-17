@@ -4,6 +4,7 @@ Team project for CSE6140 Gatech
 ## Install Python Dependencies for Local Running
 This project use Python 3+. We recommend to use python virtual environment to avoid possible dependency conflicts.
 Following shell snippet can be used to create a local virtual environment.
+
 ```shell script
 For windows:
   cmd cd to current directory (../CSE6140-Project/)
