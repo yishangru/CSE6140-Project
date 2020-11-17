@@ -25,7 +25,7 @@ For linux / MacOS:
 After the virtual environment is created and activated, use following command to run scripts.
 ```shell script
 python main.py -inst <filePath> -alg [BnB|Approx|LS1|LS2|NetworkX] -time <cutoff in seconds> -seed <random seed>
-# see more usage with -h
+# see more usage with -h, filePath example: ./data/Data/dummy1.graph
 ```
 If you install new package to the environment, **make sure you update `dependencies.txt` with correct package name and version, and commit**. 
 Just add the main package with version to `dependencies.txt` should be fine. Refer to `dependencies.txt` for example dependencies. 

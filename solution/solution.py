@@ -37,7 +37,19 @@ Generate another threads:
     - Monitor the time limit, and terminate solution thread
     - Running algorithm, and generate solution 
 """
-def solutionExecutor(graph, solution, timeLimit, parameterDict=None):
+def solutionExecutor(**params_dict):
+    graph = params_dict["graph"]
+    solution = params_dict["solution"]
+    time_limit = params_dict["timeLimit"]
+    random_seed = params_dict["randomSeed"]
+    parameter_dict = params_dict["parameterDict"]
+
+    print(solution)
+    print(random_seed)
+    print(time_limit)
+    print(parameter_dict)
+    print(graph)
+
     # graph is a deep copy, thread-safe to change
     if solution == "BnB":
         pass

@@ -11,7 +11,6 @@ Data read:
 Solution output:
     Write current best vertex solution to file
 """
-import copy
 import collections
 
 class Graph(object):
@@ -26,19 +25,19 @@ def checkData(readPath):
     graph = collections.defaultdict(lambda: set())
 
     graph_data = graph_file.readlines()
-    meta = graph_data[0].strip().split(",")
+    meta = graph_data[0].strip().split()
     node_count, edge_count = int(meta[0]), int(meta[1])
 
     graph_file.close()
 
-    # check whether node number as expected
-    if node_count != (len(graph_data) - 1):
-        print("Node Number is " + ("smaller" if node_count < (len(graph_data) - 1) else "bigger") + " than expected!")
-        return False
-
     # check whether adjacent relation as expected
     for i in range(1, len(graph_data)):
         edge_info = [int(node) for node in graph_data[i].strip().split()]
+
+        # skip isolated vertex
+        if len(edge_info) == 0:
+            continue
+
         for neighbor in edge_info:
             if neighbor < 1:
                 print("Neighbor node < 1!" + " --- Node: " + str(i))
@@ -49,21 +48,29 @@ def checkData(readPath):
             if neighbor == i:
                 print("Node link with itself!" + " --- Node: " + str(i))
                 return False
-            # check completeness
-            if neighbor < i:
-                if neighbor not in graph.keys():
-                    print("Incomplete graph, neighbor missing!" + " --- Node: " + str(i) + ", Neighbor: " + str(neighbor))
-                    return False
-                if i not in graph[neighbor]:
-                    print("Incomplete graph, edge missing!" + " --- Node: " + str(i) + ", Neighbor: " + str(neighbor))
-                    return False
-            graph[i].update(edge_info)
+        graph[i].update(edge_info)
+
+    # check adjacent relation completeness
+    for node in graph.keys():
+        for neighbor in graph[node]:
+            if neighbor not in graph.keys():
+                print("Incomplete graph, neighbor missing!" + " --- Node: " + str(i) + ", Neighbor: " + str(neighbor))
+                return False
+            if node not in graph[neighbor]:
+                print("Incomplete graph, edge missing!" + " --- Node: " + str(i) + ", Neighbor: " + str(neighbor))
+                return False
 
     # check whether edge number as expected
     edge_sum = sum([len(graph[node]) for node in graph.keys()])
-    if edge_sum != edge_count:
+    if edge_sum != 2 * edge_count:
         print("Edge Number is " + ("smaller" if edge_sum < edge_count else "bigger") + " than expected!")
         return False
+
+    # check whether node number as expected
+    if node_count != len(graph):
+        print("Warning: Actual node number is " + ("smaller" if len(graph) < node_count else "bigger") +
+              " than expected! If smaller, there is possible isolated vertex!")
+
     return True
 
 # read graph data
@@ -72,14 +79,21 @@ def readData(readPath):
     graph = collections.defaultdict(lambda: set())
 
     graph_data = graph_file.readlines()
-    meta = graph_data[0].strip().split(",")
+    meta = graph_data[0].strip().split()
     node_count, edge_count = int(meta[0]), int(meta[1])
 
     graph_file.close()
 
     for i in range(1, len(graph_data)):
-        graph[i].update([int(node) for node in graph_data[i].strip().split()])
-    return Graph(node=node_count, edge=edge_count, adjacent_matrix=graph)
+        edge_info = [int(node) for node in graph_data[i].strip().split()]
+
+        # skip isolated vertex
+        if len(edge_info) == 0:
+            continue
+        graph[i].update(edge_info)
+
+    # there is graph with isolated vertex, we subtract those from node_count
+    return Graph(node=len(graph), edge=edge_count, adjacent_matrix=graph)
 
 # check solution complete
 def checkSol(readPath, vertexSet):
@@ -96,7 +110,7 @@ def checkSol(readPath, vertexSet):
     return True
 
 # write solution vertex
-def writeSol(writePath, vertexSet):
+def writeSol(writePath, vertexSet, usedTime):
     solution_file = open(writePath, mode='w', encoding="utf-8")
     solution_file.write(str(len(vertexSet)) + "\n")
     solution_file.write(",".join(vertexSet) + "\n")
