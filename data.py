@@ -82,9 +82,9 @@ def readData(readPath):
     return Graph(node=node_count, edge=edge_count, adjacent_matrix=graph)
 
 # check solution complete
-def checkSol(graph, vertexSet):
-    copied_graph = copy.deepcopy(graph)
-    adjacent_matrix = copied_graph.adjacent_matrix
+def checkSol(readPath, vertexSet):
+    graph = readData(readPath)
+    adjacent_matrix = graph.adjacent_matrix
     for vertex in vertexSet:
         for neighbor in adjacent_matrix[vertex]:
             adjacent_matrix[neighbor].remove(vertex)
