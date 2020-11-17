@@ -5,9 +5,10 @@ import threading
 
 class Solution(threading.Thread):
     @classmethod
-    def __init__(self, graph):
+    def __init__(self, graph, randomSeed):
         super().__init__()
         self.graph = graph
+        self.randomSeed = randomSeed
         self.lock = threading.Lock()
         self.vertexSet = set()  # current best vertex set solution
 
@@ -37,7 +38,18 @@ Generate another threads:
     - Running algorithm, and generate solution 
 """
 def solutionExecutor(graph, solution, timeLimit, parameterDict=None):
-    if solution == "BB":
+    # graph is a deep copy, thread-safe to change
+    if solution == "BnB":
         pass
+    elif solution == "LS1":
+        pass
+    elif solution == "LS2":
+        pass
+    elif solution == "Approx":
+        pass
+    else:
+        print("Not Implemented Solution! Check Arguments!")
+        raise RuntimeError
+
     solution = Solution(set())
     return solution.getVertexSet()

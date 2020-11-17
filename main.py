@@ -4,6 +4,7 @@ import argparse
 from solution.solution import solutionExecutor
 
 defaultProcessNum = 1
+data_directory = "data/DATA/"
 
 def main():
     parser = argparse.ArgumentParser()
