@@ -34,11 +34,32 @@ def checkData(readPath):
         print("Node Number is " + ("smaller" if node_count < (len(graph_data) - 1) else "bigger") + " than expected!")
         return False
     # check whether adjacent relation as expected
-
-    # check whether edge number as expected
-
     for i in range(1, len(graph_data)):
-        graph[i].update([int(node) for node in graph_data[i].strip().split()])
+        edge_info = [int(node) for node in graph_data[i].strip().split()]
+        for neighbor in edge_info:
+            if neighbor < 1:
+                print("Neighbor node < 1!" + " --- Node: " + str(i))
+                return False
+            if neighbor > node_count:
+                print("Neighbor node > node count!" + " --- Node: " + str(i))
+                return False
+            if neighbor == i:
+                print("Node link with itself!" + " --- Node: " + str(i))
+                return False
+            # check completeness
+            if neighbor < i:
+                if neighbor not in graph.keys():
+                    print("Incomplete graph, neighbor missing!" + " --- Node: " + str(i) + ", Neighbor: " + str(neighbor))
+                    return False
+                if i not in graph[neighbor]:
+                    print("Incomplete graph, edge missing!" + " --- Node: " + str(i) + ", Neighbor: " + str(neighbor))
+                    return False
+            graph[i].update(edge_info)
+    # check whether edge number as expected
+    edge_sum = sum([len(graph[node]) for node in graph.keys()])
+    if edge_sum != edge_count:
+        print("Edge Number is " + ("smaller" if edge_sum < edge_count else "bigger") + " than expected!")
+        return False
     return True
 
 # read graph data

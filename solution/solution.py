@@ -47,6 +47,8 @@ def solutionExecutor(graph, solution, timeLimit, parameterDict=None):
         pass
     elif solution == "Approx":
         pass
+    elif solution == "NetworkX":
+        pass
     else:
         print("Not Implemented Solution! Check Arguments!")
         raise RuntimeError
