@@ -3,6 +3,7 @@ Team project for CSE6140 Gatech
 
 ## Install Python Dependencies for Local Running
 This project use Python 3+. We recommend to use python virtual environment to avoid possible dependency conflicts.
+
 Following shell snippet can be used to create a local virtual environment.
 
 ```shell script
@@ -22,7 +23,9 @@ For linux / MacOS:
 ```
 
 If you install new package to the environment, **make sure you update `dependencies.txt` with correct package name and version, and commit**. 
-Just add the main package with version to `dependencies.txt` should be fine. Following shell snippet can be used to retrieve installed package lists.
+Just add the main package with version to `dependencies.txt` should be fine. 
+
+Following shell snippet can be used to retrieve installed package lists.
 
 ```shell script
 pip freeze  # get current installed packages and version info
