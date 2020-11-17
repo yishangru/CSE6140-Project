@@ -34,7 +34,7 @@ from solution.networkXSol import networkXSol
 """
 Generate another threads:
     - Monitor the time limit, and terminate solution thread
-    - Perform exec
+    - Running algorithm, and generate solution 
 """
 def solutionExecutor(graph, solution, timeLimit, parameterDict=None):
     if solution == "BB":
