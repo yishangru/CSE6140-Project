@@ -33,6 +33,7 @@ def checkData(readPath):
     if node_count != (len(graph_data) - 1):
         print("Node Number is " + ("smaller" if node_count < (len(graph_data) - 1) else "bigger") + " than expected!")
         return False
+
     # check whether adjacent relation as expected
     for i in range(1, len(graph_data)):
         edge_info = [int(node) for node in graph_data[i].strip().split()]
@@ -55,6 +56,7 @@ def checkData(readPath):
                     print("Incomplete graph, edge missing!" + " --- Node: " + str(i) + ", Neighbor: " + str(neighbor))
                     return False
             graph[i].update(edge_info)
+
     # check whether edge number as expected
     edge_sum = sum([len(graph[node]) for node in graph.keys()])
     if edge_sum != edge_count:
