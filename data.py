@@ -95,4 +95,3 @@ def writeSol(writePath, vertexSet):
     solution_file = open(writePath, mode='w', encoding="utf-8")
     solution_file.write(str(len(vertexSet)) + "\n")
     solution_file.write(",".join(vertexSet) + "\n")
-    

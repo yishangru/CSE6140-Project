@@ -9,8 +9,10 @@ data_directory = "data/DATA/"
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-c', '--check', type=int, required=False,
+    parser.add_argument('-cd', '--checkData', type=bool, required=False, default=False,
                         help="check graph data validity")
+    parser.add_argument('-cs', '--checkSol', type=bool, required=False, default=False,
+                        help="check solution completeness")
     parser.add_argument('-l', '--lab', type=int, nargs=None, required=True,
                         help="lab number for tests to run")
     parser.add_argument('-p', '--part', type=int, nargs='?', default=None,
