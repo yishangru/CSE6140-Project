@@ -12,6 +12,14 @@ def main():
 
     args = parser.parse_args()
 
+    # read data
+
+    # generate possible multiple process
+
+    # select best
+
+    # write vertex set
+
 
 if __name__ == "main":
     main()
