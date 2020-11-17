@@ -16,7 +16,11 @@ def main():
 
     # read data
 
-    # generate possible multiple process
+    """
+    Using multiprocessing for possible multiple process concurrent running.
+    Multiprocessing will serialize and deserialize the argument (deep copy). 
+    Thus, each process will have it independent memory space (not affect other).
+    """
 
     # select best
 
