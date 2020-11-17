@@ -1,7 +1,24 @@
 # CSE6140-Project
 Team project for CSE6140 Gatech
 
-## Possible Paper Lists
+## Install Python Dependencies for Local Running
+This project use Python 3+. We recommend to use python virtual environment to avoid possible dependency conflicts.
+Following shell snippet can be used to create a local virtual environment.
+```shell script
+For windows:
+  cmd cd to current directory (../CSE6140-Project/)
+  
+  python3 -m venv env
+  env\Scripts\activate.bat
+
+For linux / MacOS:
+  terminal cd to current directory (../CSE6140-Project/)
+  
+  python3 -m venv env
+  source env/bin/activate
+```
+
+## Paper Reference Lists
 ### Local Search
 - Two Weighting Local Search for Minimum Vertex Cover (AAAI 2015) [paper link](https://dl.acm.org/doi/abs/10.5555/2887007.2887161#pill-authors__contentcon)
 - Local search with edge weighting and configuration checking heuristics for minimum vertex cover Cover (revised from AAAI 2010, Artificial Intelligence) [paper link](https://www.sciencedirect.com/science/article/pii/S0004370211000427)
