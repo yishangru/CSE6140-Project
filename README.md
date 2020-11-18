@@ -51,7 +51,8 @@ pip freeze  # get current installed packages and version info
 - Approximating the minimum vertex cover in sublinear time and a connection to distributed algorithms (Theortical Computer Science) [paper link](https://www.sciencedirect.com/science/article/pii/S0304397507003696)
 - Analytical and Experimental Comparison of Six Algorithms for the Vertex Cover Problem [paper link](https://dl.acm.org/doi/pdf/10.1145/1671970.1865971)
 - NMVSA Greedy Solution for Vertex Cover Problem [paper link](https://pdfs.semanticscholar.org/e8f5/943ebf4891a782dc8c25944fd71e0276a5bf.pdf)
- - An Approximation Algorithm for the Minimum Vertex Cover Problem [paper link](https://www.researchgate.net/publication/294139277_An)
+- Analytical and experimental comparison of six algorithms for the vertex cover problem [paper link](https://www.researchgate.net/publication/)238344195_Analytical_and_experimental_comparison_of_six_algorithms_for_the_vertex_cover_problem
+- An Approximation Algorithm for the Minimum Vertex Cover Problem [paper link](https://www.researchgate.net/publication/294139277_An)
  
 
 ## Python NetworkX
