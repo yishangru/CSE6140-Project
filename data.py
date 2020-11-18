@@ -110,8 +110,18 @@ def checkSol(readPath, vertexSet):
     return True
 
 # write solution vertex
-def writeSol(writePath, vertexSet, usedTime):
+def writeSol(writePath, vertexSet):
+    # write solution file
     solution_file = open(writePath, mode='w', encoding="utf-8")
     solution_file.write(str(len(vertexSet)) + "\n")
     solution_file.write(",".join(vertexSet) + "\n")
     solution_file.close()
+
+# write trace file
+def writeTrace(writePath, traceList):
+    # write trace file
+    trace_file = open(writePath, mode='w', encoding="utf-8")
+    # trace[0] as time, trace[1] as vertex set size
+    for trace in traceList:
+        trace_file.write(str(trace[0]) + ", " + str(trace[1]) + "\n")
+    trace_file.close()

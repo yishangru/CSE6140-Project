@@ -2,11 +2,10 @@
 # -*- coding: utf-8 -*-
 import os
 import json
-import time
 import argparse
 import multiprocessing
 from solution.solution import solutionExecutor
-from data import checkData, readData, checkSol, writeSol
+from data import checkData, readData, checkSol, writeSol, writeTrace
 
 defaultProcessNum = 1
 graphDataDirectory = "./data/Data"
@@ -29,7 +28,6 @@ def main():
                         help="Parameter string for algorithm parameter setting in JSON, "
                              "e.g. '{\"para1\": 3, \"para2\": [\"str\", 1, 3.5]}'")
 
-    start_time = time.time()
     args = parser.parse_args()
 
     if not (os.path.exists(args.inst) and os.path.isfile(args.inst)):
@@ -41,11 +39,12 @@ def main():
         print("Graph Data " + ("Valid" if checkData(args.inst) else "Invalid"))
         return
 
-        # read data
+    start_time = time.time()
+
+    # read data
     graph = readData(args.inst)
     param_json = json.loads(args.params)
     print(param_json)
-    print(graph.adjacent_matrix)
 
     """
         Using multiprocessing for possible multiple process concurrent running.
@@ -53,7 +52,7 @@ def main():
         Thus, each process will have it independent memory space (not affect other).
         """
     params_dict = {"graph": graph, "solution": args.alg, "timeLimit": args.time,
-                   "randomSeed": args.seed, "parameterDict": param_json}
+                   "randomSeed": args.seed, "parameterDict": param_json, "startTime": start_time}
     process_pool = multiprocessing.Pool(processes=defaultProcessNum)
     # shallow copy for parameter passing
     retrieved_sols = process_pool.map(solutionExecutor, [params_dict for i in range(defaultProcessNum)])
@@ -69,15 +68,14 @@ def main():
     # select best
     current_best = retrieved_sols[0]
     for solution in range(1, len(retrieved_sols)):
-        if len(retrieved_sols[solution]) < len(current_best):
-            current_best = solution
-
-    used_time = format(time.time() - start_time, '.2f')
+        if len(retrieved_sols[solution][0]) < len(current_best[0]):
+            current_best = retrieved_sols[solution]
 
     # write vertex set
     write_path = args.inst.split("/")[-1].split(".")[0] + "_" + args.alg + "_" + str(args.time) + \
-                 (str(args.seed) if not (args.seed == 1) else "") + ".sol"
-    writeSol(writePath=write_path, vertexSet=current_best, usedTime=used_time)
+                 (str(args.seed) if not (args.seed == 1) else "")
+    writeSol(writePath=write_path + ".sol", vertexSet=current_best[0])
+    writeTrace(writePath=write_path + ".trace", traceList=current_best[1])
 
 def batchCheckData():
     graph_file_list = os.listdir(graphDataDirectory)
