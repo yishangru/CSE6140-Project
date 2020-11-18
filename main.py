@@ -2,12 +2,13 @@
 # -*- coding: utf-8 -*-
 import os
 import json
+import time
 import argparse
 import multiprocessing
 from solution.solution import solutionExecutor
 from data import checkData, readData, checkSol, writeSol, writeTrace
 
-defaultProcessNum = 1
+defaultProcessNum = 2
 graphDataDirectory = "./data/Data"
 
 def main():
@@ -44,21 +45,21 @@ def main():
     # read data
     graph = readData(args.inst)
     param_json = json.loads(args.params)
-    print(param_json)
 
     """
         Using multiprocessing for possible multiple process concurrent running.
         Multiprocessing will serialize and deserialize the argument (deep copy). 
         Thus, each process will have it independent memory space (not affect other).
-        """
-    params_dict = {"graph": graph, "solution": args.alg, "timeLimit": args.time,
-                   "randomSeed": args.seed, "parameterDict": param_json, "startTime": start_time}
+    """
+    params_tuple = (graph, args.alg, args.time - 2, args.seed, param_json, start_time)
     process_pool = multiprocessing.Pool(processes=defaultProcessNum)
     # shallow copy for parameter passing
-    retrieved_sols = process_pool.map(solutionExecutor, [params_dict for i in range(defaultProcessNum)])
+    retrieved_sols = process_pool.starmap(solutionExecutor, [params_tuple for i in range(defaultProcessNum)])
+    process_pool.close()
+    process_pool.join()
 
     # check solution validity
-    if args.checkSolution:
+    if args.checkSol:
         print("Checking solution validity ...")
         for solution in range(len(retrieved_sols)):
             if checkSol(args.inst, retrieved_sols[solution]):
@@ -77,6 +78,7 @@ def main():
     writeSol(writePath=write_path + ".sol", vertexSet=current_best[0])
     writeTrace(writePath=write_path + ".trace", traceList=current_best[1])
 
+
 def batchCheckData():
     graph_file_list = os.listdir(graphDataDirectory)
     print(graph_file_list)
@@ -88,4 +90,4 @@ def batchCheckData():
             print()
 
 if __name__ == "__main__":
-    #main()
+    main()

@@ -76,7 +76,7 @@ def checkData(readPath):
 # read graph data
 def readData(readPath):
     graph_file = open(readPath, mode='r', encoding="utf-8")
-    graph = collections.defaultdict(lambda: set())
+    graph = dict()
 
     graph_data = graph_file.readlines()
     meta = graph_data[0].strip().split()
@@ -90,6 +90,7 @@ def readData(readPath):
         # skip isolated vertex
         if len(edge_info) == 0:
             continue
+        graph[i] = set()
         graph[i].update(edge_info)
 
     # there is graph with isolated vertex, we subtract those from node_count
@@ -114,7 +115,7 @@ def writeSol(writePath, vertexSet):
     # write solution file
     solution_file = open(writePath, mode='w', encoding="utf-8")
     solution_file.write(str(len(vertexSet)) + "\n")
-    solution_file.write(",".join(vertexSet) + "\n")
+    solution_file.write(",".join([str(vertex) for vertex in vertexSet]) + "\n")
     solution_file.close()
 
 # write trace file

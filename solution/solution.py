@@ -6,7 +6,6 @@ import copy
 import threading
 
 class Solution(threading.Thread):
-    @classmethod
     def __init__(self, graph, randomSeed, startTime):
         super().__init__()
         self.graph = graph
@@ -18,23 +17,19 @@ class Solution(threading.Thread):
         self.startTime = startTime
         self.trace = list()
 
-    @classmethod
     def run(self):
         raise NotImplementedError
 
-    @classmethod
     def updateVertexSet(self, vertexSet):
         self.lock.acquire()
         self.vertexSet = set(vertexSet)
         self.lock.release()
 
-    @classmethod
     def updateTrace(self, vertexSize):
         self.lock.acquire()
         self.trace.append((format(time.time() - self.startTime, '.2f'), vertexSize))
         self.lock.release()
 
-    @classmethod
     def getSolution(self):
         self.lock.acquire()
         vertex_sol = set(self.vertexSet)
@@ -42,26 +37,28 @@ class Solution(threading.Thread):
         self.lock.release()
         return vertex_sol, trace_sol
 
-from solution.networkXSol import networkXSol
+from solution.networkXSol import NetworkXSol
 
 """
 Generate another threads:
     - Monitor the time limit, and terminate solution thread
     - Running algorithm, and generate solution 
 """
-def solutionExecutor(**params_dict):
+def solutionExecutor(graph, solution, timeLimit, randomSeed, parameterDict, startTime):
+    """
     graph = params_dict["graph"]
     solution = params_dict["solution"]
     time_limit = params_dict["timeLimit"]
     random_seed = params_dict["randomSeed"]
     parameter_dict = params_dict["parameterDict"]
     start_time = params_dict["startTime"]
+    """
 
     print(solution)
-    print(random_seed)
-    print(time_limit)
-    print(parameter_dict)
-    print(start_time)
+    print(randomSeed)
+    print(timeLimit)
+    print(parameterDict)
+    print(startTime)
     print(graph)
 
     # graph is a deep copy, thread-safe to change
@@ -79,7 +76,9 @@ def solutionExecutor(**params_dict):
         print("Not Implemented Solution! Check Arguments!")
         raise RuntimeError
 
-    solution = Solution(set())
+    solution = NetworkXSol(graph=graph, randomSeed=randomSeed, startTime=startTime, parameterDict=parameterDict)
+    solution.updateVertexSet({1, 2, 3})
+    solution.updateTrace(4)
     vertex_set, trace_list = solution.getSolution()
 
     # possible kill thread
