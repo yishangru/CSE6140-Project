@@ -39,17 +39,20 @@ pip freeze  # get current installed packages and version info
 
 
 ## Paper Reference Lists
+### Branch and Bound
+- An Exact Algorithm for Minimum Vertex Cover Problem [paper link](https://res.mdpi.com/d_attachment/mathematics/mathematics-07-00603/article_deploy/mathematics-07-00603.pdf)
+
 ### Local Search
 - Two Weighting Local Search for Minimum Vertex Cover (AAAI 2015) [paper link](https://dl.acm.org/doi/abs/10.5555/2887007.2887161#pill-authors__contentcon)
 - Local search with edge weighting and configuration checking heuristics for minimum vertex cover Cover (revised from AAAI 2010, Artificial Intelligence) [paper link](https://www.sciencedirect.com/science/article/pii/S0004370211000427)
-- ...
+- An efficient simulated annealing algorithm for the minimum vertex cover problem [paper link](https://www.sciencedirect.com/science/article/pii/S0925231205003565?casa_token=Dz59rH3pJg8AAAAA:zWMxPM7uYdDMQ7VZ_igKVM4g0oDxapgqPUfwwWNHf9Cx1oZTKp_sZH200uE41lclpRn9ZvmYKg)
 
 ### Approximation
 - Approximating the minimum vertex cover in sublinear time and a connection to distributed algorithms (Theortical Computer Science) [paper link](https://www.sciencedirect.com/science/article/pii/S0304397507003696)
-- Analytical and Experimental Comparison of Six Algorithms for the Vertex Cover Problem [paper link]
- (https://dl.acm.org/doi/pdf/10.1145/1671970.1865971)
-- NMVSA Greedy Solution for Vertex Cover Problem [paper link] (https://pdfs.semanticscholar.org/e8f5/943ebf4891a782dc8c25944fd71e0276a5bf.pdf)
- - ...
+- Analytical and Experimental Comparison of Six Algorithms for the Vertex Cover Problem [paper link](https://dl.acm.org/doi/pdf/10.1145/1671970.1865971)
+- NMVSA Greedy Solution for Vertex Cover Problem [paper link](https://pdfs.semanticscholar.org/e8f5/943ebf4891a782dc8c25944fd71e0276a5bf.pdf)
+ - An Approximation Algorithm for the Minimum Vertex Cover Problem [paper link](https://www.researchgate.net/publication/294139277_An)
+ 
 
 ## Python NetworkX
 Bar-Yehuda, R., and Even, S. (1985). "A local-ratio theorem for approximating the weighted vertex cover problem."*Annals of Discrete Mathematics*, 25, 27–46, [MVC Sol](https://networkx.org/documentation/stable/_modules/networkx/algorithms/approximation/vertex_cover.html)
