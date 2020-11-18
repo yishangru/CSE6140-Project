@@ -11,6 +11,7 @@ from data import checkData, readData, checkSol, writeSol, writeTrace
 defaultProcessNum = 2
 graphDataDirectory = "./data/Data"
 
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-cd', '--checkData', action="store_true", default=False,
@@ -76,7 +77,7 @@ def main():
 
     # write vertex set
     write_path = args.inst.split("/")[-1].split(".")[0] + "_" + args.alg + "_" + str(args.time) + \
-                 (str(args.seed) if not (args.seed == 1) else "")
+                 (("_" + str(args.seed)) if not (args.seed == -1) else "")
     writeSol(writePath=write_path + ".sol", vertexSet=current_best[0])
     writeTrace(writePath=write_path + ".trace", traceList=current_best[1])
 
@@ -90,6 +91,7 @@ def batchCheckData():
             print("Checking graph valid: " + graph)
             print("Graph Data " + ("Valid" if checkData(os.path.join(graphDataDirectory, graph)) else "Invalid"))
             print()
+
 
 if __name__ == "__main__":
     main()
