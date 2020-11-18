@@ -40,8 +40,9 @@ class Solution(threading.Thread):
 from solution.networkXSol import NetworkXSol
 
 """
-Generate another threads:
+Main thread:
     - Monitor the time limit, and terminate solution thread
+Generate another thread:   
     - Running algorithm, and generate solution 
 """
 def solutionExecutor(graph, solution, timeLimit, randomSeed, parameterDict, startTime):
@@ -76,7 +77,7 @@ def solutionExecutor(graph, solution, timeLimit, randomSeed, parameterDict, star
 
     # possible kill thread, still works without killing
     if solution_thread.is_alive():
-        print("Thread is still alive!")
+        print("Warning: Thread is still alive! Return Solution.")
 
     return vertex_set, trace_list
 
