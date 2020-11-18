@@ -54,10 +54,10 @@ def checkData(readPath):
     for node in graph.keys():
         for neighbor in graph[node]:
             if neighbor not in graph.keys():
-                print("Incomplete graph, neighbor missing!" + " --- Node: " + str(i) + ", Neighbor: " + str(neighbor))
+                print("Incomplete graph, neighbor missing!" + " --- Node: " + str(node) + ", Neighbor: " + str(neighbor))
                 return False
             if node not in graph[neighbor]:
-                print("Incomplete graph, edge missing!" + " --- Node: " + str(i) + ", Neighbor: " + str(neighbor))
+                print("Incomplete graph, edge missing!" + " --- Node: " + str(node) + ", Neighbor: " + str(neighbor))
                 return False
 
     # check whether edge number as expected
