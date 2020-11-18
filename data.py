@@ -126,3 +126,4 @@ def writeTrace(writePath, traceList):
     for trace in traceList:
         trace_file.write(str(trace[0]) + ", " + str(trace[1]) + "\n")
     trace_file.close()
+

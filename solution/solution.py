@@ -79,3 +79,4 @@ def solutionExecutor(graph, solution, timeLimit, randomSeed, parameterDict, star
         print("Thread is still alive!")
 
     return vertex_set, trace_list
+

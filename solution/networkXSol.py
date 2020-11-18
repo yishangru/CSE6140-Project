@@ -17,3 +17,4 @@ class NetworkXSol(Solution):
         self.updateVertexSet({1, 2, 3})
         self.updateTrace(4)
         time.sleep(1)
+
