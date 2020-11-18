@@ -14,10 +14,6 @@ graphDataDirectory = "./data/Data"
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-cd', '--checkData', action="store_true", default=False,
-                        help="check graph data validity")
-    parser.add_argument('-cs', '--checkSol', action="store_true", default=False,
-                        help="check solution completeness")
     parser.add_argument('-inst', type=str, required=True,
                         help="graph data path")
     parser.add_argument('-alg', type=str, required=True,
@@ -26,6 +22,10 @@ def main():
                         help="Time limit for algorithm run, default no")
     parser.add_argument('-seed', type=int, default=-1,
                         help="Random seed, default -1")
+    parser.add_argument('-cd', '--checkData', action="store_true", default=False,
+                        help="check graph data validity")
+    parser.add_argument('-cs', '--checkSol', action="store_true", default=False,
+                        help="check solution completeness")
     parser.add_argument('-params', type=str, default="{}",
                         help="Parameter string for algorithm parameter setting in JSON, "
                              "e.g. '{\"para1\": 3, \"para2\": [\"str\", 1, 3.5]}'")
