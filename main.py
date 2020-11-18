@@ -50,13 +50,15 @@ def main():
         Using multiprocessing for possible multiple process concurrent running.
         Multiprocessing will serialize and deserialize the argument (deep copy). 
         Thus, each process will have it independent memory space (not affect other).
+        Set time limit as args.time - 2, allowing solution select and output tasks. 
     """
     params_tuple = (graph, args.alg, args.time - 2, args.seed, param_json, start_time)
     process_pool = multiprocessing.Pool(processes=defaultProcessNum)
     # shallow copy for parameter passing
     retrieved_sols = process_pool.starmap(solutionExecutor, [params_tuple for i in range(defaultProcessNum)])
+    # not join to allow termination, main thread keep going once having return value
+    # process_pool.join()
     process_pool.close()
-    process_pool.join()
 
     # check solution validity
     if args.checkSol:

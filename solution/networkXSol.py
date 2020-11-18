@@ -2,6 +2,7 @@
 This is a solution retrieved using networkX.
 """
 
+import time
 from solution.solution import Solution
 
 class NetworkXSol(Solution):
@@ -13,4 +14,6 @@ class NetworkXSol(Solution):
     # override parent method
     def run(self):
         # actual algorithm, update current best solution
-        pass
+        self.updateVertexSet({1, 2, 3})
+        self.updateTrace(4)
+        time.sleep(1)

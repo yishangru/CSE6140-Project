@@ -45,14 +45,6 @@ Generate another threads:
     - Running algorithm, and generate solution 
 """
 def solutionExecutor(graph, solution, timeLimit, randomSeed, parameterDict, startTime):
-    """
-    graph = params_dict["graph"]
-    solution = params_dict["solution"]
-    time_limit = params_dict["timeLimit"]
-    random_seed = params_dict["randomSeed"]
-    parameter_dict = params_dict["parameterDict"]
-    start_time = params_dict["startTime"]
-    """
 
     print(solution)
     print(randomSeed)
@@ -76,11 +68,14 @@ def solutionExecutor(graph, solution, timeLimit, randomSeed, parameterDict, star
         print("Not Implemented Solution! Check Arguments!")
         raise RuntimeError
 
-    solution = NetworkXSol(graph=graph, randomSeed=randomSeed, startTime=startTime, parameterDict=parameterDict)
-    solution.updateVertexSet({1, 2, 3})
-    solution.updateTrace(4)
-    vertex_set, trace_list = solution.getSolution()
+    solution_thread = NetworkXSol(graph=graph, randomSeed=randomSeed, startTime=startTime, parameterDict=parameterDict)
+    solution_thread.start()
+    solution_thread.join(timeout=timeLimit)
 
-    # possible kill thread
+    vertex_set, trace_list = solution_thread.getSolution()
+
+    # possible kill thread, still works without killing
+    if solution_thread.is_alive():
+        print("Thread is still alive!")
 
     return vertex_set, trace_list
