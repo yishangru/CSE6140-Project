@@ -8,6 +8,7 @@ import multiprocessing
 from solution.solution import solutionExecutor
 from data import checkData, readData, checkSol, writeSol, writeTrace
 
+DEBUG = True
 defaultProcessNum = 2
 graphDataDirectory = "./data/Data"
 
@@ -50,7 +51,7 @@ def main():
         for graph in graph_file_list:
             split_name = graph.split(".")
             if len(split_name) == 2 and split_name[1] == "graph":
-                target_graph_list.append(str(os.path.join(graphDataDirectory, graph)))
+                target_graph_list.append(graphDataDirectory + "/" + graph)
     else:
         target_graph_list.append(args.inst)
 
@@ -91,9 +92,17 @@ def main():
             if len(retrieved_sols[solution][0]) < len(current_best[0]):
                 current_best = retrieved_sols[solution]
 
+        write_dir = "."
+        if DEBUG:
+            write_dir = "./result"
+            if not (os.path.exists(write_dir) and os.path.isdir(write_dir)):
+                os.mkdir(write_dir)
+        write_dir += "/"
+
         # write vertex set
-        write_path = graph_path.split("/")[-1].split(".")[0] + "_" + args.alg + "_" + str(args.time) + \
+        write_path = write_dir + graph_path.split("/")[-1].split(".")[0] + "_" + args.alg + "_" + str(args.time) + \
                      (("_" + str(args.seed)) if not (args.seed == -1) else "")
+        print(write_path)
         writeSol(writePath=write_path + ".sol", vertexSet=current_best[0])
         writeTrace(writePath=write_path + ".trace", traceList=current_best[1])
 
