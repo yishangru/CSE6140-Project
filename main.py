@@ -99,11 +99,12 @@ def main():
                 os.mkdir(write_dir)
         write_dir += "/"
 
-        # write vertex set
+        # ./result/ if DEBUG else .
         write_path = write_dir + graph_path.split("/")[-1].split(".")[0] + "_" + args.alg + "_" + str(args.time) + \
                      (("_" + str(args.seed)) if not (args.seed == -1) else "")
-        print(write_path)
+        # write vertex set
         writeSol(writePath=write_path + ".sol", vertexSet=current_best[0])
+        # write trace
         writeTrace(writePath=write_path + ".trace", traceList=current_best[1])
 
 
