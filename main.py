@@ -110,7 +110,6 @@ def main():
 
 def batchCheckData():
     graph_file_list = os.listdir(graphDataDirectory)
-    print(graph_file_list)
     for graph in graph_file_list:
         split_name = graph.split(".")
         if len(split_name) == 2 and split_name[1] == "graph":
