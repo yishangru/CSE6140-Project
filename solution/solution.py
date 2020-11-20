@@ -40,7 +40,7 @@ class Solution(threading.Thread):
 
 
 from solution.networkXSol import NetworkXSol
-from solution.approxiSol import ApproxiSol, ApproxiUpdateSol
+from solution.approxiSol import ApproxSol, ApproxUpdateSol
 
 """
 Main thread:
@@ -68,10 +68,10 @@ def solutionExecutor(graph, solution, timeLimit, randomSeed, parameterDict, star
     elif solution == "LS2":
         pass
     elif solution == "Approx":
-        solution_thread = ApproxiSol(graph=graph, randomSeed=randomSeed, startTime=startTime,
+        solution_thread = ApproxSol(graph=graph, randomSeed=randomSeed, startTime=startTime,
                                      parameterDict=parameterDict)
     elif solution == "ApproxUpdate":
-        solution_thread = ApproxiUpdateSol(graph=graph, randomSeed=randomSeed, startTime=startTime,
+        solution_thread = ApproxUpdateSol(graph=graph, randomSeed=randomSeed, startTime=startTime,
                                            parameterDict=parameterDict)
     elif solution == "NetworkX":
         solution_thread = NetworkXSol(graph=graph, randomSeed=randomSeed, startTime=startTime,

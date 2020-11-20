@@ -4,7 +4,7 @@ This is a solution retrieved using approximate Sol.
 
 from solution.solution import Solution
 
-class ApproxiSol(Solution):
+class ApproxSol(Solution):
     def __init__(self, graph, randomSeed, startTime, parameterDict):
         super().__init__(graph, randomSeed, startTime)
         self.parameterDict = parameterDict
@@ -36,7 +36,7 @@ class ApproxiSol(Solution):
         self.updateTrace(len(vc))
 
 
-class ApproxiUpdateSol(Solution):
+class ApproxUpdateSol(Solution):
     def __init__(self, graph, randomSeed, startTime, parameterDict):
         super().__init__(graph, randomSeed, startTime)
         self.parameterDict = parameterDict
