@@ -5,6 +5,7 @@ import time
 import copy
 import threading
 
+
 class Solution(threading.Thread):
     def __init__(self, graph, randomSeed, startTime):
         super().__init__()
@@ -37,7 +38,9 @@ class Solution(threading.Thread):
         self.lock.release()
         return vertex_sol, trace_sol
 
+
 from solution.networkXSol import NetworkXSol
+from solution.approxiSol import ApproxiSol, ApproxiUpdateSol
 
 """
 Main thread:
@@ -45,8 +48,9 @@ Main thread:
 Generate another thread:   
     - Running algorithm, and generate solution 
 """
-def solutionExecutor(graph, solution, timeLimit, randomSeed, parameterDict, startTime):
 
+
+def solutionExecutor(graph, solution, timeLimit, randomSeed, parameterDict, startTime):
     print(solution)
     print(randomSeed)
     print(timeLimit)
@@ -55,6 +59,8 @@ def solutionExecutor(graph, solution, timeLimit, randomSeed, parameterDict, star
     print(graph)
 
     # graph is a deep copy, thread-safe to change
+    solution_thread = NetworkXSol(graph=graph, randomSeed=randomSeed, startTime=startTime,
+                                  parameterDict=parameterDict)
     if solution == "BnB":
         pass
     elif solution == "LS1":
@@ -62,14 +68,18 @@ def solutionExecutor(graph, solution, timeLimit, randomSeed, parameterDict, star
     elif solution == "LS2":
         pass
     elif solution == "Approx":
-        pass
+        solution_thread = ApproxiSol(graph=graph, randomSeed=randomSeed, startTime=startTime,
+                                     parameterDict=parameterDict)
+    elif solution == "ApproxUpdate":
+        solution_thread = ApproxiUpdateSol(graph=graph, randomSeed=randomSeed, startTime=startTime,
+                                           parameterDict=parameterDict)
     elif solution == "NetworkX":
-        pass
+        solution_thread = NetworkXSol(graph=graph, randomSeed=randomSeed, startTime=startTime,
+                                      parameterDict=parameterDict)
     else:
         print("Not Implemented Solution! Check Arguments!")
         raise RuntimeError
 
-    solution_thread = NetworkXSol(graph=graph, randomSeed=randomSeed, startTime=startTime, parameterDict=parameterDict)
     solution_thread.start()
     solution_thread.join(timeout=timeLimit)
 
@@ -80,4 +90,3 @@ def solutionExecutor(graph, solution, timeLimit, randomSeed, parameterDict, star
         print("Warning: Thread is still alive! Return Solution.")
 
     return vertex_set, trace_list
-

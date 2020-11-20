@@ -9,7 +9,7 @@ from solution.solution import solutionExecutor
 from data import checkData, readData, checkSol, writeSol, writeTrace
 
 DEBUG = True
-defaultProcessNum = 2
+defaultProcessNum = 1
 graphDataDirectory = "./data/Data"
 
 
@@ -18,7 +18,7 @@ def main():
     parser.add_argument('-inst', type=str, required=True,
                         help="graph data path")
     parser.add_argument('-alg', type=str, required=True,
-                        help="algorithm [BnB|Approx|LS1|LS2|NetworkX]")
+                        help="algorithm [BnB|Approx|ApproxUpdate|LS1|LS2|NetworkX]")
     parser.add_argument('-time', type=int, default=-1,
                         help="time limit for algorithm run, default no")
     parser.add_argument('-seed', type=int, default=-1,
@@ -82,7 +82,8 @@ def main():
         if args.checkSol:
             print("Checking solution validity ...")
             for solution in range(len(retrieved_sols)):
-                if checkSol(graph_path, retrieved_sols[solution]):
+                if checkSol(graph_path, retrieved_sols[solution][0]):
+                    print("Solution " + str(solution) + " check: valid")
                     continue
                 print("Solution " + str(solution) + " check: fail")
 

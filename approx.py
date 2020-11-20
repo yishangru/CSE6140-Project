@@ -37,4 +37,4 @@ def Approximation(file_name):
   return vc
 
 
-Approximation('data/Data/football.graph')
+Approximation('data/Data/dummy1.graph')
