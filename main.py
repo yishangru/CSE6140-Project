@@ -57,6 +57,7 @@ def main():
 
     for i in range(len(target_graph_list)):
         graph_path = target_graph_list[i]
+        print("Current Running [ " + graph_path + " ]")
 
         start_time = time.time()
 
@@ -107,6 +108,7 @@ def main():
         writeSol(writePath=write_path + ".sol", vertexSet=current_best[0])
         # write trace
         writeTrace(writePath=write_path + ".trace", traceList=current_best[1])
+        print("Finish running [ " + graph_path + " ] ...\n")
 
 
 def batchCheckData():

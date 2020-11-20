@@ -51,13 +51,6 @@ Generate another thread:
 
 
 def solutionExecutor(graph, solution, timeLimit, randomSeed, parameterDict, startTime):
-    print(solution)
-    print(randomSeed)
-    print(timeLimit)
-    print(parameterDict)
-    print(startTime)
-    print(graph)
-
     # graph is a deep copy, thread-safe to change
     solution_thread = NetworkXSol(graph=graph, randomSeed=randomSeed, startTime=startTime,
                                   parameterDict=parameterDict)
