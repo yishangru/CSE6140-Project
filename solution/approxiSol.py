@@ -18,7 +18,6 @@ class ApproxiSol(Solution):
         adjacent_matrix = self.graph.adjacent_matrix
         degree_list = [(node, len(adjacent_matrix[node])) for node in adjacent_matrix.keys()]
         degree_list.sort(key=(lambda x: x[1]))
-        print(degree_list)
 
         current_edge = self.graph.edge
         max_idx = len(degree_list) - 1
@@ -54,7 +53,6 @@ class ApproxiUpdateSol(Solution):
         while current_edge > 0:
             # update when remove node
             max_degree_node = max(adjacent_matrix.keys(), key=(lambda k: len(adjacent_matrix[k])))
-            print(max_degree_node)
 
             for neighbor in adjacent_matrix[max_degree_node]:
                 adjacent_matrix[neighbor].remove(max_degree_node)
