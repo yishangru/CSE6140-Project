@@ -19,8 +19,8 @@ def main():
                         help="graph data path")
     parser.add_argument('-alg', type=str, required=True,
                         help="algorithm [BnB|Approx|ApproxUpdate|LS1|LS2|NetworkX]")
-    parser.add_argument('-time', type=int, default=-1,
-                        help="time limit for algorithm run, default no")
+    parser.add_argument('-time', type=int, default=200,
+                        help="time limit for algorithm run, default 200")
     parser.add_argument('-seed', type=int, default=-1,
                         help="Random seed, default -1")
     parser.add_argument('-cd', '--checkData', action="store_true", default=False,
