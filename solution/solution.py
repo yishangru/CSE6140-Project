@@ -40,7 +40,7 @@ class Solution(threading.Thread):
 
 
 from solution.networkXSol import NetworkXSol
-from solution.approxiSol import ApproxSol, ApproxUpdateSol
+from solution.approxSol import ApproxSol, ApproxUpdateSol
 
 """
 Main thread:
