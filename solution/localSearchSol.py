@@ -4,7 +4,7 @@ This is a solution retrieved using local search Sol.
 
 from solution.solution import Solution
 
-class localSearch1Sol(Solution):
+class LocalSearch1Sol(Solution):
     def __init__(self, graph, randomSeed, startTime, parameterDict):
         super().__init__(graph, randomSeed, startTime)
         self.parameterDict = parameterDict
