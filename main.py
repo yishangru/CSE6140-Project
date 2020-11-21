@@ -39,11 +39,6 @@ def main():
         print("File Path Invalid - " + args.inst)
         return
 
-    if args.checkData:
-        print("Checking graph valid: " + args.inst)
-        print("Graph Data " + ("Valid" if checkData(args.inst) else "Invalid"))
-        return
-
     target_graph_list = list()
 
     if args.batchRun:
@@ -58,6 +53,13 @@ def main():
     for i in range(len(target_graph_list)):
         graph_path = target_graph_list[i]
         print("Current Running [ " + graph_path + " ]")
+
+        # check graph valid
+        if args.checkData:
+            print("Checking graph valid: " + graph_path)
+            print("Graph Data " + ("Valid" if checkData(graph_path) else "Invalid"))
+            print()
+            continue
 
         start_time = time.time()
 
@@ -109,16 +111,6 @@ def main():
         # write trace
         writeTrace(writePath=write_path + ".trace", traceList=current_best[1])
         print("Finish running [ " + graph_path + " ] ...\n")
-
-
-def batchCheckData():
-    graph_file_list = os.listdir(graphDataDirectory)
-    for graph in graph_file_list:
-        split_name = graph.split(".")
-        if len(split_name) == 2 and split_name[1] == "graph":
-            print("Checking graph valid: " + graph)
-            print("Graph Data " + ("Valid" if checkData(os.path.join(graphDataDirectory, graph)) else "Invalid"))
-            print()
 
 
 if __name__ == "__main__":
