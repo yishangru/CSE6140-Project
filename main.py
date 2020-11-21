@@ -56,11 +56,12 @@ def main():
 
         # check graph valid
         if args.checkData:
-            print("Checking graph valid: " + graph_path)
-            print("Graph Data " + ("Valid" if checkData(graph_path) else "Invalid"))
+            print("Checking graph valid ...")
+            print("Graph Data [ " + graph_path + " ] " + ("Valid" if checkData(graph_path) else "Invalid"))
             print()
             continue
 
+        # start running
         start_time = time.time()
 
         # read data
