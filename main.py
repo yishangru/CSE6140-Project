@@ -6,7 +6,7 @@ import time
 import argparse
 import multiprocessing
 from solution.solution import solutionExecutor
-from data import checkData, readData, checkSol, writeSol, writeTrace
+from utils.data import checkData, readData, checkSol, writeSol, writeTrace
 
 DEBUG = True
 defaultProcessNum = 1
