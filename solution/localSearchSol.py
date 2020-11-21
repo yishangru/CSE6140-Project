@@ -15,3 +15,4 @@ class LocalSearch1Sol(Solution):
         # Author: Cai, Shaowei, Jinkun Lin, and Kaile Su.
         # In Proceedings of the Twenty-Ninth AAAI Conference on Artificial Intelligence, pp. 1107-1113. 2015.
         pass
+    
