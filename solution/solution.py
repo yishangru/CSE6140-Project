@@ -62,10 +62,10 @@ def solutionExecutor(graph, solution, timeLimit, randomSeed, parameterDict, star
         pass
     elif solution == "Approx":
         solution_thread = ApproxSol(graph=graph, randomSeed=randomSeed, startTime=startTime,
-                                     parameterDict=parameterDict)
+                                    parameterDict=parameterDict)
     elif solution == "ApproxUpdate":
         solution_thread = ApproxUpdateSol(graph=graph, randomSeed=randomSeed, startTime=startTime,
-                                           parameterDict=parameterDict)
+                                          parameterDict=parameterDict)
     elif solution == "NetworkX":
         solution_thread = NetworkXSol(graph=graph, randomSeed=randomSeed, startTime=startTime,
                                       parameterDict=parameterDict)
