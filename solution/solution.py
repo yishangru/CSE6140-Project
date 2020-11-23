@@ -41,7 +41,7 @@ class Solution(threading.Thread):
 
 from solution.networkXSol import NetworkXSol
 from solution.approxSol import ApproxSol, ApproxUpdateSol
-from solution.localSearchSol import LocalSearch1Sol
+from solution.localSearchSol import TWLocalSearchSol
 
 """
 Main thread:

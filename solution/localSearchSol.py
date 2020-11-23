@@ -1,10 +1,10 @@
 """
-This is a solution retrieved using local search Sol.
+This is a solution retrieved using local search Sol - Two Weighting Local Search.
 """
 
 from solution.solution import Solution
 
-class LocalSearch1Sol(Solution):
+class TWLocalSearchSol(Solution):
     def __init__(self, graph, randomSeed, startTime, parameterDict):
         super().__init__(graph, randomSeed, startTime)
         self.parameterDict = parameterDict
