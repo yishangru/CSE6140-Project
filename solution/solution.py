@@ -24,15 +24,13 @@ class Solution(threading.Thread):
     def updateRecord(self, vertexSet):
         self.lock.acquire()
         if len(self.vertexSet) <= len(vertexSet):
+            self.initialized = True
             self.__updateVertexSet(vertexSet)
             self.__updateTrace(len(vertexSet))
         self.lock.release()
 
-    def __updateVertexSet(self, vertexSet):
-        self.vertexSet = set(vertexSet)
-
-    def __updateTrace(self, vertexSize):
-        self.trace.append((format(time.time() - self.startTime, '.2f'), vertexSize))
+    def getVCSize(self):
+        return len(self.vertexSet)
 
     def getSolution(self):
         self.lock.acquire()
@@ -41,6 +39,11 @@ class Solution(threading.Thread):
         self.lock.release()
         return vertex_sol, trace_sol
 
+    def __updateVertexSet(self, vertexSet):
+        self.vertexSet = set(vertexSet)
+
+    def __updateTrace(self, vertexSize):
+        self.trace.append((format(time.time() - self.startTime, '.2f'), vertexSize))
 
 from solution.networkXSol import NetworkXSol
 from solution.approxSol import ApproxSol, ApproxUpdateSol

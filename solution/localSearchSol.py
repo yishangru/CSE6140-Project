@@ -28,6 +28,9 @@ class TWLocalSearchSol(Solution):
             vc.append(max_degree_node)
         return vc
 
+    def checkCoverage(self):
+        pass
+
     # override parent method
     def run(self):
         # "Two weighting local search for minimum vertex cover."
@@ -41,5 +44,6 @@ class TWLocalSearchSol(Solution):
         current_solution = self.greedy()
         self.updateRecord(vertexSet=current_solution)
 
-
+        while self.getVCSize() > self.parameterDict["opt"]:
+            pass
 
