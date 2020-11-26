@@ -84,6 +84,7 @@ def main():
             print()
             continue
 
+        # add graph name, and optimal for cutoff
         graph_instance = graph_path.split("/")[-1].split(".")[0]
         param_json = json.loads(args.params)
         param_json["graph_name"] = graph_instance
