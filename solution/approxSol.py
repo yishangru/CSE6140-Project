@@ -32,8 +32,7 @@ class ApproxSol(Solution):
             vc.append(max_degree_node)
             max_idx -= 1
 
-        self.updateVertexSet(vc)
-        self.updateTrace(len(vc))
+        self.updateRecord(vertexSet=vc)
 
 
 class ApproxUpdateSol(Solution):
@@ -60,5 +59,4 @@ class ApproxUpdateSol(Solution):
             adjacent_matrix.pop(max_degree_node)
             vc.append(max_degree_node)
 
-        self.updateVertexSet(vc)
-        self.updateTrace(len(vc))
+        self.updateRecord(vertexSet=vc)

@@ -21,15 +21,19 @@ class Solution(threading.Thread):
     def run(self):
         raise NotImplementedError
 
-    def updateVertexSet(self, vertexSet):
+    def updateRecord(self, vertexSet):
         self.lock.acquire()
-        self.vertexSet = set(vertexSet)
+        if len(self.vertexSet) > len(vertexSet):
+            return
+        self.updateVertexSet(vertexSet)
+        self.updateTrace(len(vertexSet))
         self.lock.release()
 
+    def updateVertexSet(self, vertexSet):
+        self.vertexSet = set(vertexSet)
+
     def updateTrace(self, vertexSize):
-        self.lock.acquire()
         self.trace.append((format(time.time() - self.startTime, '.2f'), vertexSize))
-        self.lock.release()
 
     def getSolution(self):
         self.lock.acquire()
