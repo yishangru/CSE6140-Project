@@ -10,7 +10,7 @@ from utils.data import readData
 from main import optimalVC
 #------------ for mini test ------------#
 
-
+import copy
 from solution.solution import Solution
 
 
@@ -19,19 +19,23 @@ def greedy(graph):
     # Max Degree Greedy Algorithm
     # Fran¸cois Delbot and Christian Laforest. Analytical and experimental comparison of six algorithms for the
     # vertex cover problem. Journal of Experimental Algorithmics (JEA), 15:1–4, 2010.
-    vc = []
+    vc = set()
     adjacent_matrix = graph.adjacent_matrix
+    edge_number_mapping = dict()
+    for node in adjacent_matrix.keys():
+        edge_number_mapping[node] = len(adjacent_matrix[node])
 
     current_edge = graph.edge
     while current_edge > 0:
         # update when remove node
-        max_degree_node = max(adjacent_matrix.keys(), key=(lambda k: len(adjacent_matrix[k])))
+        max_degree_node = max(edge_number_mapping.keys(), key=(lambda k: edge_number_mapping[k]))
 
         for neighbor in adjacent_matrix[max_degree_node]:
-            adjacent_matrix[neighbor].remove(max_degree_node)
-        current_edge -= len(adjacent_matrix[max_degree_node])
-        adjacent_matrix.pop(max_degree_node)
-        vc.append(max_degree_node)
+            if neighbor not in vc:
+                edge_number_mapping[neighbor] -= 1
+        current_edge -= edge_number_mapping[max_degree_node]
+        edge_number_mapping.pop(max_degree_node)
+        vc.add(max_degree_node)
     return vc
 
 
@@ -76,9 +80,16 @@ def mini_test_ls(graphPath):
     graph_instance = graphPath.split("/")[-1].split(".")[0]
 
     sol = TWSearchSol(graph=graph,
-                           randomSeed=0,
-                           startTime=time.time(),
-                           parameterDict={"graph_name": graph_instance, "opt": optimalVC[graph_instance]})
+                      randomSeed=0,
+                      startTime=time.time(),
+                      parameterDict={"graph_name": graph_instance,
+                                     "opt": optimalVC[graph_instance] if graph_instance in optimalVC.keys() else -1})
     sol.run()
 
-mini_test_ls("../data/Data/jazz.graph")
+dataDir = "../data/Data"
+graph_file_list = os.listdir(dataDir)
+for graph in graph_file_list:
+    split_name = graph.split(".")
+    if len(split_name) == 2 and split_name[1] == "graph":
+        print(graph)
+        mini_test_ls(dataDir + "/" + graph)
