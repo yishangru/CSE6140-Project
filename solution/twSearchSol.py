@@ -10,22 +10,22 @@ from utils.data import readData
 from main import optimalVC
 #------------ for mini test ------------#
 
-import copy
 from solution.solution import Solution
 
 
-# greedy for initial solution
+# greedy for initial solution - same as approximate
 def greedy(graph):
     # Max Degree Greedy Algorithm
     # Fran¸cois Delbot and Christian Laforest. Analytical and experimental comparison of six algorithms for the
     # vertex cover problem. Journal of Experimental Algorithmics (JEA), 15:1–4, 2010.
     vc = set()
     adjacent_matrix = graph.adjacent_matrix
+    current_edge = graph.edge
+
     edge_number_mapping = dict()
     for node in adjacent_matrix.keys():
         edge_number_mapping[node] = len(adjacent_matrix[node])
 
-    current_edge = graph.edge
     while current_edge > 0:
         # update when remove node
         max_degree_node = max(edge_number_mapping.keys(), key=(lambda k: edge_number_mapping[k]))
