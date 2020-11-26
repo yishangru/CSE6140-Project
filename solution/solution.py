@@ -25,14 +25,14 @@ class Solution(threading.Thread):
         self.lock.acquire()
         if len(self.vertexSet) > len(vertexSet):
             return
-        self.updateVertexSet(vertexSet)
-        self.updateTrace(len(vertexSet))
+        self.__updateVertexSet(vertexSet)
+        self.__updateTrace(len(vertexSet))
         self.lock.release()
 
-    def updateVertexSet(self, vertexSet):
+    def __updateVertexSet(self, vertexSet):
         self.vertexSet = set(vertexSet)
 
-    def updateTrace(self, vertexSize):
+    def __updateTrace(self, vertexSize):
         self.trace.append((format(time.time() - self.startTime, '.2f'), vertexSize))
 
     def getSolution(self):
