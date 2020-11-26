@@ -23,10 +23,9 @@ class Solution(threading.Thread):
 
     def updateRecord(self, vertexSet):
         self.lock.acquire()
-        if len(self.vertexSet) > len(vertexSet):
-            return
-        self.__updateVertexSet(vertexSet)
-        self.__updateTrace(len(vertexSet))
+        if len(self.vertexSet) <= len(vertexSet):
+            self.__updateVertexSet(vertexSet)
+            self.__updateTrace(len(vertexSet))
         self.lock.release()
 
     def __updateVertexSet(self, vertexSet):
