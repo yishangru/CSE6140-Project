@@ -13,6 +13,20 @@ defaultProcessNum = 1
 graphDataDirectory = "./data/Data"
 debugResultDirectory = "./result"  # writing directory when DEBUG
 
+optimalVC = {
+    "jazz": 158,
+    "karate": 14,
+    "football": 94,
+    "as-22july06": 3303,
+    "hep-th": 3926,
+    "star": 6902,
+    "star2": 4542,
+    "netscience": 899,
+    "email": 594,
+    "delaunay_n10": 703,
+    "power": 2203
+}
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -70,6 +84,11 @@ def main():
             print()
             continue
 
+        graph_instance = graph_path.split("/")[-1].split(".")[0]
+        param_json = json.loads(args.params)
+        param_json["graph_name"] = graph_instance
+        param_json["opt"] = optimalVC[graph_instance] if graph_instance in optimalVC.keys() else -1
+
         # ./result/ if DEBUG else .
         for run_count in range(1, args.rc + 1):
             write_dir = "."
@@ -79,21 +98,18 @@ def main():
                     os.mkdir(write_dir)
             # running algorithm
             print("Start running [" + str(run_count) + "] ...")
-            run(args, graph_path, write_dir)
+            run(args, param_json, graph_path, write_dir)
 
         print("Finish running [ " + graph_path + " ] ...\n")
 
 
-def run(args, graph_path, write_dir):
+def run(args, params, graph_path, write_dir):
+
     # start running
     start_time = time.time()
 
     # read data
     graph = readData(graph_path)
-    param_json = json.loads(args.params)
-
-    graph_instance = graph_path.split("/")[-1].split(".")[0]
-    param_json["graph_name"] = graph_instance
 
     """
         Using multiprocessing for possible multiple process concurrent running.
@@ -101,7 +117,7 @@ def run(args, graph_path, write_dir):
         Thus, each process will have it independent memory space (not affect other).
         Set time limit as args.time - 2, allowing solution select and output tasks. 
     """
-    params_tuple = (graph, args.alg, args.time - 2, args.seed, param_json, start_time)
+    params_tuple = (graph, args.alg, args.time - 2, args.seed, params, start_time)
     process_pool = multiprocessing.Pool(processes=defaultProcessNum)
     # shallow copy for parameter passing
     retrieved_sols = process_pool.starmap(solutionExecutor, [params_tuple for i in range(defaultProcessNum)])
@@ -124,7 +140,7 @@ def run(args, graph_path, write_dir):
         if len(retrieved_sols[solution][0]) < len(current_best[0]):
             current_best = retrieved_sols[solution]
 
-    write_result_path = os.path.join(write_dir, graph_instance + "_" + args.alg + "_"
+    write_result_path = os.path.join(write_dir, params["graph_name"] + "_" + args.alg + "_"
                                      + str(args.time) + (("_" + str(args.seed)) if not (args.seed == -1) else ""))
     # write vertex set
     writeSol(writePath=write_result_path + ".sol", vertexSet=current_best[0])
