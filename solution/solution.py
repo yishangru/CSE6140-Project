@@ -45,6 +45,7 @@ class Solution(threading.Thread):
     def __updateTrace(self, vertexSize):
         self.trace.append((format(time.time() - self.startTime, '.2f'), vertexSize))
 
+
 from solution.networkXSol import NetworkXSol
 from solution.approxSol import ApproxSol, ApproxUpdateSol
 from solution.localSearchSol import TWLocalSearchSol
