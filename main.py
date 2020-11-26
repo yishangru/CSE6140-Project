@@ -11,7 +11,8 @@ from utils.data import checkData, readData, checkSol, writeSol, writeTrace
 DEBUG = True
 defaultProcessNum = 1
 graphDataDirectory = "./data/Data"
-debugResultDirectory = "./result"
+debugResultDirectory = "./result"  # writing directory when DEBUG
+
 
 def main():
     parser = argparse.ArgumentParser()
