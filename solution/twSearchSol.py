@@ -1,9 +1,14 @@
 """
 This is a solution retrieved using local search Sol - Two Weighting Local Search.
 """
+#------------ for mini test ------------#
 import os, sys
 sys.path.append("..")
 sys.path.remove(os.path.abspath("."))
+import time
+from utils.data import readData
+from main import optimalVC
+#------------ for mini test ------------#
 
 
 from solution.solution import Solution
@@ -67,10 +72,6 @@ class TWSearchSol(Solution):
 
 
 def mini_test_ls(graphPath):
-    import time
-    from utils.data import readData
-    from main import optimalVC
-
     graph = readData(graphPath)
     graph_instance = graphPath.split("/")[-1].split(".")[0]
 

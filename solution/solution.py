@@ -5,10 +5,6 @@ import time
 import copy
 import threading
 
-from solution.networkXSol import NetworkXSol
-from solution.approxSol import ApproxSol, ApproxUpdateSol
-from solution.twSearchSol import TWSearchSol
-
 
 class Solution(threading.Thread):
     def __init__(self, graph, randomSeed, startTime):
@@ -65,6 +61,10 @@ Generate another thread:
 
 
 def solutionExecutor(graph, solution, timeLimit, randomSeed, parameterDict, startTime):
+
+    from solution.networkXSol import NetworkXSol
+    from solution.approxSol import ApproxSol, ApproxUpdateSol
+    # from solution.twSearchSol import TWSearchSol
 
     # graph is a deep copy, thread-safe to change
     solution_thread = NetworkXSol(graph=graph, randomSeed=randomSeed, startTime=startTime,
