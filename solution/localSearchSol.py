@@ -42,7 +42,7 @@ class TWLocalSearchSol(Solution):
 
         # get initial solution using approximate greedy
         current_solution = self.greedy()
-        self.updateRecord(vertexSet=current_solution)
+        self.updateSolution(vertexSet=current_solution)
 
         while self.getVCSize() > self.parameterDict["opt"]:
             pass

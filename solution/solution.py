@@ -21,7 +21,7 @@ class Solution(threading.Thread):
     def run(self):
         raise NotImplementedError
 
-    def updateRecord(self, vertexSet):
+    def updateSolution(self, vertexSet):
         self.lock.acquire()
         if len(self.vertexSet) <= len(vertexSet):
             self.initialized = True
