@@ -34,8 +34,8 @@ class Solution(threading.Thread):
 
     def getSolution(self):
         self.lock.acquire()
-        vertex_sol = set(self.vertexSet)
-        trace_sol = copy.deepcopy(self.trace)
+        vertex_sol = self.__getVertexSet()
+        trace_sol = self.__getTrace()
         self.lock.release()
         return vertex_sol, trace_sol
 
@@ -44,6 +44,12 @@ class Solution(threading.Thread):
 
     def __updateTrace(self, vertexSize):
         self.trace.append((format(time.time() - self.startTime, '.2f'), vertexSize))
+
+    def __getVertexSet(self):
+        return set(self.vertexSet)
+
+    def __getTrace(self):
+        return copy.deepcopy(self.trace)
 
 
 from solution.networkXSol import NetworkXSol
