@@ -92,6 +92,9 @@ def run(args, graph_path, write_dir):
     graph = readData(graph_path)
     param_json = json.loads(args.params)
 
+    graph_instance = graph_path.split("/")[-1].split(".")[0]
+    param_json["graph_name"] = graph_instance
+
     """
         Using multiprocessing for possible multiple process concurrent running.
         Multiprocessing will serialize and deserialize the argument (deep copy). 
@@ -121,7 +124,7 @@ def run(args, graph_path, write_dir):
         if len(retrieved_sols[solution][0]) < len(current_best[0]):
             current_best = retrieved_sols[solution]
 
-    write_result_path = os.path.join(write_dir, graph_path.split("/")[-1].split(".")[0] + "_" + args.alg + "_"
+    write_result_path = os.path.join(write_dir, graph_instance + "_" + args.alg + "_"
                                      + str(args.time) + (("_" + str(args.seed)) if not (args.seed == -1) else ""))
     # write vertex set
     writeSol(writePath=write_result_path + ".sol", vertexSet=current_best[0])
