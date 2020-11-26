@@ -24,7 +24,6 @@ class Solution(threading.Thread):
     def updateSolution(self, vertexSet):
         self.lock.acquire()
         if len(self.vertexSet) <= len(vertexSet):
-            self.initialized = True
             self.__updateVertexSet(vertexSet)
             self.__updateTrace(len(vertexSet))
         self.lock.release()
