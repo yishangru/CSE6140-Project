@@ -70,28 +70,7 @@ class TWSearchSol(Solution):
 
         adjacent_matrix = self.graph.adjacent_matrix
 
-        # initialize vertex ages
-        self.vertex_ages = dict()
-
-        # initialize vertex configuration
-        self.vertex_configurations = dict()
-        for node in adjacent_matrix.keys():
-            self.vertex_configurations[node] = dict()
-            for neighbor in adjacent_matrix[node]:
-                self.vertex_configurations[node][neighbor] = 0
-
-        # initialize vertex weights
-        self.vertex_weights = dict()
-        for node in adjacent_matrix.keys():
-            self.vertex_weights[node] = 0
-
-        # initialize edge weights, reference [node1][node2], where node1 < node2
-        self.edge_weights = dict()
-        for node in adjacent_matrix.keys():
-            self.edge_weights[node] = dict()
-            for neighbor in adjacent_matrix[node]:
-                if neighbor > node:
-                    self.edge_weights[node][neighbor] = 1
+        self.initialization()
 
         # === Possible Open Sub Thread for Greedy === #
         # get initial solution using approximate greedy
@@ -99,7 +78,7 @@ class TWSearchSol(Solution):
         self.updateSolution(vertexSet=self.current_solution)
 
         self.step = 0
-
+        self.restart = 0
         while self.getVCSize() > self.parameterDict["opt"]:
             uncover_edges = checkCoverage(self.edge_weights, self.current_solution)
 
@@ -109,8 +88,17 @@ class TWSearchSol(Solution):
             # check whether new solution found
             if len(uncover_edges) == 0:
                 print("Updating Solution At:" + str(self.step) + " , Len:" + str(len(self.current_solution)))
+                self.restart = 0
                 self.updateSolution(vertexSet=self.current_solution)
                 self.removeNode(select_node)
+                continue
+
+            # add possible restart
+            if self.restart > 0.25 * self.delta:
+                print("Restart Solution ...")
+                self.initialization()
+                self.current_solution = self.getSolution()[0]
+                self.restart = 0
                 continue
 
             # try swap for another vertex
@@ -161,6 +149,7 @@ class TWSearchSol(Solution):
                         self.vertex_weights[node] -= 1
 
             self.step += 1
+            self.restart += 1
 
         solution, trace = self.getSolution()
         print("Len Solution & Uncovered Edge:")
@@ -168,6 +157,33 @@ class TWSearchSol(Solution):
         print(checkCoverage(self.edge_weights, solution))
         print("Trace:")
         print(trace)
+
+    # initialization
+    def initialization(self):
+        adjacent_matrix = self.graph.adjacent_matrix
+
+        # initialize vertex ages
+        self.vertex_ages = dict()
+
+        # initialize vertex configuration
+        self.vertex_configurations = dict()
+        for node in adjacent_matrix.keys():
+            self.vertex_configurations[node] = dict()
+            for neighbor in adjacent_matrix[node]:
+                self.vertex_configurations[node][neighbor] = 0
+
+        # initialize vertex weights
+        self.vertex_weights = dict()
+        for node in adjacent_matrix.keys():
+            self.vertex_weights[node] = 0
+
+        # initialize edge weights, reference [node1][node2], where node1 < node2
+        self.edge_weights = dict()
+        for node in adjacent_matrix.keys():
+            self.edge_weights[node] = dict()
+            for neighbor in adjacent_matrix[node]:
+                if neighbor > node:
+                    self.edge_weights[node][neighbor] = 1
 
     # select greatest score vertex
     def selectRemoveNode(self):
