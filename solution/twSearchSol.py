@@ -59,7 +59,7 @@ class TWSearchSol(Solution):
     def __init__(self, graph, randomSeed, startTime, parameterDict):
         super().__init__(graph, randomSeed, startTime)
         self.parameterDict = parameterDict
-        # === Possible Move to Solution === #
+        # TODO: Move to Solution
         random.seed(randomSeed)
 
     # override parent method
@@ -69,7 +69,7 @@ class TWSearchSol(Solution):
         # In Proceedings of the Twenty-Ninth AAAI Conference on Artificial Intelligence, pp. 1107-1113. 2015.
 
         # parameter for two weight
-        self.gamma, self.delta, self.beta = min(self.graph.edge//8, 1), 10000, 0.8
+        self.gamma, self.delta, self.beta = max(self.graph.edge//8, 1), 10000, 0.8
 
         adjacent_matrix = self.graph.adjacent_matrix
 
@@ -90,15 +90,15 @@ class TWSearchSol(Solution):
 
             # check whether new solution found
             if len(uncover_edges) == 0:
-                #print("Updating Solution At:" + str(self.step) + " , Len:" + str(len(self.current_solution)))
+                print("Updating Solution At:" + str(self.step) + " , Len:" + str(len(self.current_solution)))
                 self.restart = 0
                 self.updateSolution(vertexSet=self.current_solution)
                 self.removeNode(select_node)
                 continue
 
-            # add possible restart
-            if self.restart > 0.25 * self.delta and len(uncover_edges) > 30:
-                print("Restart Solution ..., Current Sol: " + str(self.getVCSize()))
+            # add possible restart: TODO: 5 -> 15, 0.3 -> 0.2
+            if len(uncover_edges) > 5 and (len(uncover_edges) > 50 or self.restart > 0.3 * self.delta):
+                print("Restart Solution ..., Current Sol: " + str(self.getVCSize()) + " , Uncover: " + str(len(uncover_edges)))
                 self.initialization()
                 self.current_solution = self.getSolution()[0]
                 self.restart = 0

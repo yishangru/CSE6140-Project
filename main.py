@@ -24,7 +24,9 @@ optimalVC = {
     "netscience": 899,
     "email": 594,
     "delaunay_n10": 703,
-    "power": 2203
+    "power": 2203,
+    "dummy1": 2,
+    "dummy2": 3
 }
 
 
@@ -88,7 +90,7 @@ def main():
         graph_instance = graph_path.split("/")[-1].split(".")[0]
         param_json = json.loads(args.params)
         param_json["graph_name"] = graph_instance
-        param_json["opt"] = optimalVC[graph_instance] if graph_instance in optimalVC.keys() else -1
+        param_json["opt"] = optimalVC[graph_instance] if graph_instance in optimalVC.keys() else 0
 
         # ./result/ if DEBUG else .
         for run_count in range(1, args.rc + 1):
