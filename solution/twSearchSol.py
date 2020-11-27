@@ -66,7 +66,7 @@ class TWSearchSol(Solution):
         # In Proceedings of the Twenty-Ninth AAAI Conference on Artificial Intelligence, pp. 1107-1113. 2015.
 
         # parameter for two weight
-        self.gamma, self.delta, self.beta = self.graph.edge//10, 100000, 0.8
+        self.gamma, self.delta, self.beta = self.graph.edge//8, 10000, 0.8
 
         adjacent_matrix = self.graph.adjacent_matrix
 
@@ -99,16 +99,16 @@ class TWSearchSol(Solution):
         self.updateSolution(vertexSet=self.current_solution)
 
         self.step = 0
-        while self.getVCSize() > self.parameterDict["opt"]:
-            uncover_edges = checkCoverage(self.graph, self.current_solution)
 
-            print("Step:" + str(self.step) + " , Uncover:" + str(len(uncover_edges)))
+        while self.getVCSize() > self.parameterDict["opt"]:
+            uncover_edges = checkCoverage(self.edge_weights, self.current_solution)
 
             # choose a vertex for smaller search
             select_node = self.selectRemoveNode()
 
             # check whether new solution found
             if len(uncover_edges) == 0:
+                print("Updating Solution At:" + str(self.step) + " , Len:" + str(len(self.current_solution)))
                 self.updateSolution(vertexSet=self.current_solution)
                 self.removeNode(select_node)
                 continue
@@ -152,11 +152,22 @@ class TWSearchSol(Solution):
                 if node not in self.current_solution:
                     self.vertex_weights[node] += 1
             if self.step % 100 == 0:
+                # ==== log ==== #
+                print("Step:" + str(self.step) + " , Remove:" + str(select_node) + " , Add:" + str(add_node) +
+                      " , Uncover:" + str(len(uncover_edges)) + ", Current: " + str(self.getVCSize()))
+                # ==== log ==== #
                 for node in self.vertex_weights.keys():
                     if self.vertex_weights[node] > 1:
                         self.vertex_weights[node] -= 1
 
             self.step += 1
+
+        solution, trace = self.getSolution()
+        print("Len Solution & Uncovered Edge:")
+        print(len(solution))
+        print(checkCoverage(self.edge_weights, solution))
+        print("Trace:")
+        print(trace)
 
     # select greatest score vertex
     def selectRemoveNode(self):
@@ -180,7 +191,7 @@ class TWSearchSol(Solution):
             if increase_lost < smallest_lost:
                 node_select, smallest_lost = node, increase_lost
             elif abs(increase_lost - smallest_lost) < 0.000001:  # equal, check age
-                assert node_select != 1, "Selected Node as -1"
+                assert node_select != -1, "Selected Node as -1"
                 duration1 = self.vertex_ages[node] if node in self.vertex_ages.keys() else self.step
                 duration2 = self.vertex_ages[node_select] if node_select in self.vertex_ages.keys() else self.step
                 if duration1 < duration2:
@@ -270,9 +281,12 @@ def mini_test_ls(graphPath):
     sol.run()
 
 dataDir = "../data/Data"
+"""
 graph_file_list = os.listdir(dataDir)
 for graph in graph_file_list:
     split_name = graph.split(".")
     if len(split_name) == 2 and split_name[1] == "graph":
         print(graph)
         mini_test_ls(dataDir + "/" + graph)
+"""
+mini_test_ls(dataDir + "/" + "star.graph")
