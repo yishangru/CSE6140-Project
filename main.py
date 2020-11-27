@@ -142,7 +142,7 @@ def run(args, params, graph_path, write_dir):
     for solution in range(1, len(retrieved_sols)):
         if len(retrieved_sols[solution][0]) < len(current_best[0]):
             current_best = retrieved_sols[solution]
-
+    # TODO: Change file name for BnB
     write_result_path = os.path.join(write_dir, params["graph_name"] + "_" + args.alg + "_"
                                      + str(args.time) + (("_" + str(args.seed)) if not (args.seed == -1) else ""))
     # write vertex set
