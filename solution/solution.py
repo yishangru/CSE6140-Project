@@ -65,7 +65,7 @@ def solutionExecutor(graph, solution, timeLimit, randomSeed, parameterDict, star
 
     from solution.networkXSol import NetworkXSol
     from solution.approxSol import ApproxSol, ApproxUpdateSol
-    from solution.twSearchSol import TWSearchSol
+    # from solution.twSearchSol import TWSearchSol
 
     # graph is a deep copy, thread-safe to change
     solution_thread = NetworkXSol(graph=graph, randomSeed=randomSeed, startTime=startTime,
@@ -76,7 +76,8 @@ def solutionExecutor(graph, solution, timeLimit, randomSeed, parameterDict, star
         solution_thread = TWSearchSol(graph=graph, randomSeed=randomSeed, startTime=startTime,
                                       parameterDict=parameterDict)
     elif solution == "LS2":
-        pass
+        solution_thread = SimulatedAnnealing(graph=graph, randomSeed=randomSeed, startTime=startTime,
+                                    parameterDict=parameterDict)
     elif solution == "Approx":
         solution_thread = ApproxSol(graph=graph, randomSeed=randomSeed, startTime=startTime,
                                     parameterDict=parameterDict)
