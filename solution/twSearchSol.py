@@ -96,7 +96,7 @@ class TWSearchSol(Solution):
                 self.removeNode(select_node)
                 continue
 
-            # add possible restart: TODO: 5 -> 15, 0.3 -> 0.2
+            # add possible restart: TODO: adjust parameter
             if len(uncover_edges) > 5 and (len(uncover_edges) > 50 or self.restart > 0.3 * self.delta):
                 print("Restart Solution ..., Current Sol: " + str(self.getVCSize()) + " , Uncover: " + str(len(uncover_edges)))
                 self.initialization()
@@ -143,10 +143,6 @@ class TWSearchSol(Solution):
                 if node not in self.current_solution:
                     self.vertex_weights[node] += 1
             if self.step % 100 == 0:
-                # ==== log ==== #
-                #print("Step:" + str(self.step) + " , Remove:" + str(select_node) + " , Add:" + str(add_node) +
-                #      " , Uncover:" + str(len(uncover_edges)) + ", Current: " + str(self.getVCSize()))
-                # ==== log ==== #
                 for node in self.vertex_weights.keys():
                     if self.vertex_weights[node] > 1:
                         self.vertex_weights[node] -= 1
