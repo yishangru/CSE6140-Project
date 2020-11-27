@@ -76,6 +76,7 @@ def solutionExecutor(graph, solution, timeLimit, randomSeed, parameterDict, star
         solution_thread = TWSearchSol(graph=graph, randomSeed=randomSeed, startTime=startTime,
                                       parameterDict=parameterDict)
     elif solution == "LS2":
+        # LS2 for simulated annealing
         solution_thread = SimulatedAnnealing(graph=graph, randomSeed=randomSeed, startTime=startTime,
                                     parameterDict=parameterDict)
     elif solution == "Approx":
