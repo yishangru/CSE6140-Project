@@ -17,19 +17,17 @@ class SimulatedAnnealing(Solution):
         random.seed(randomSeed) # set seeds
 
         # useful stuff
-
         self.coveredVerticesSet = self.greedy(copy.deepcopy(self.graph)) # a list of covered(used) vertices
         self.coveredVerticesList = list(self.coveredVerticesSet)  # a set of covered(used) vertices
         self.globalBestVC = copy.deepcopy(self.coveredVerticesList)
         # self.myGraph = copy.deepcopy(self.graph) # this graph will be modified
         self.myGraph = self.initGraph() # this graph will be modified
 
-
     def run(self):
         # Main loop here
         for _ in range(self.steps):
             current_edge = self.myGraph.edge
-            print(current_edge)
+            # print(current_edge)
             # If there are remaining edges, then there are two actions:
             # 1. add an unused vertex with some probability
             # 2. remove an used vertex, then add an unused vertex (switch a pair of vertices)
@@ -72,6 +70,7 @@ class SimulatedAnnealing(Solution):
             self.T = self.T * self.alpha
             self.T = max(self.T, 0.005)
 
+
             # update globalMax here
             # ==== TODO ======
             if self.myGraph.edge == 0 and len(self.globalBestVC) == 0 or len(self.globalBestVC) > len(self.coveredVerticesList):
@@ -79,8 +78,6 @@ class SimulatedAnnealing(Solution):
 
         # vc = self.coveredVerticesList # get the final vertexSet
         self.updateSolution(vertexSet=self.globalBestVC)
-
-
 
     # # override parent method
     # def run(self):
@@ -182,6 +179,7 @@ class SimulatedAnnealing(Solution):
         self.coveredVerticesSet.add(vertexToAdd)
         self.coveredVerticesList.append(vertexToAdd)
 
+
     # greedy for initial solution - same as approximate
     def greedy(self, graph):
         # Max Degree Greedy Algorithm
@@ -216,8 +214,6 @@ class SimulatedAnnealing(Solution):
                 graph.node -= 1
 
         return graph
-
-
 
 
     # def sigmoid(x):
