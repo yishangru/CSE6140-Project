@@ -1,6 +1,8 @@
 """
 This is a solution retrieved using local search Sol - Two Weighting Local Search.
 """
+
+"""
 #------------ for mini test ------------#
 import os, sys
 sys.path.append("..")
@@ -9,6 +11,7 @@ import time
 from utils.data import readData
 from main import optimalVC
 #------------ for mini test ------------#
+"""
 
 import random
 from solution.solution import Solution
@@ -66,7 +69,7 @@ class TWSearchSol(Solution):
         # In Proceedings of the Twenty-Ninth AAAI Conference on Artificial Intelligence, pp. 1107-1113. 2015.
 
         # parameter for two weight
-        self.gamma, self.delta, self.beta = self.graph.edge//8, 10000, 0.8
+        self.gamma, self.delta, self.beta = min(self.graph.edge//8, 1), 10000, 0.8
 
         adjacent_matrix = self.graph.adjacent_matrix
 
@@ -87,15 +90,15 @@ class TWSearchSol(Solution):
 
             # check whether new solution found
             if len(uncover_edges) == 0:
-                print("Updating Solution At:" + str(self.step) + " , Len:" + str(len(self.current_solution)))
+                #print("Updating Solution At:" + str(self.step) + " , Len:" + str(len(self.current_solution)))
                 self.restart = 0
                 self.updateSolution(vertexSet=self.current_solution)
                 self.removeNode(select_node)
                 continue
 
             # add possible restart
-            if self.restart > 0.25 * self.delta:
-                print("Restart Solution ...")
+            if self.restart > 0.25 * self.delta and len(uncover_edges) > 30:
+                print("Restart Solution ..., Current Sol: " + str(self.getVCSize()))
                 self.initialization()
                 self.current_solution = self.getSolution()[0]
                 self.restart = 0
@@ -141,8 +144,8 @@ class TWSearchSol(Solution):
                     self.vertex_weights[node] += 1
             if self.step % 100 == 0:
                 # ==== log ==== #
-                print("Step:" + str(self.step) + " , Remove:" + str(select_node) + " , Add:" + str(add_node) +
-                      " , Uncover:" + str(len(uncover_edges)) + ", Current: " + str(self.getVCSize()))
+                #print("Step:" + str(self.step) + " , Remove:" + str(select_node) + " , Add:" + str(add_node) +
+                #      " , Uncover:" + str(len(uncover_edges)) + ", Current: " + str(self.getVCSize()))
                 # ==== log ==== #
                 for node in self.vertex_weights.keys():
                     if self.vertex_weights[node] > 1:
@@ -151,12 +154,7 @@ class TWSearchSol(Solution):
             self.step += 1
             self.restart += 1
 
-        solution, trace = self.getSolution()
-        print("Len Solution & Uncovered Edge:")
-        print(len(solution))
-        print(checkCoverage(self.edge_weights, solution))
-        print("Trace:")
-        print(trace)
+        print(self.parameterDict["graph_name"] + " find optimization ...")
 
     # initialization
     def initialization(self):
@@ -285,6 +283,7 @@ class TWSearchSol(Solution):
             self.vertex_configurations[neighbor][node] = 1
 
 
+"""
 def mini_test_ls(graphPath):
     graph = readData(graphPath)
     graph_instance = graphPath.split("/")[-1].split(".")[0]
@@ -297,12 +296,11 @@ def mini_test_ls(graphPath):
     sol.run()
 
 dataDir = "../data/Data"
-"""
 graph_file_list = os.listdir(dataDir)
 for graph in graph_file_list:
     split_name = graph.split(".")
     if len(split_name) == 2 and split_name[1] == "graph":
         print(graph)
         mini_test_ls(dataDir + "/" + graph)
-"""
 mini_test_ls(dataDir + "/" + "star.graph")
+"""
