@@ -13,6 +13,7 @@ class Solution(threading.Thread):
         self.randomSeed = randomSeed
         self.lock = threading.Lock()
         # current best vertex set solution
+        self.initialized = False
         self.vertexSet = set()
         # record trace
         self.startTime = startTime
@@ -23,7 +24,8 @@ class Solution(threading.Thread):
 
     def updateSolution(self, vertexSet):
         self.lock.acquire()
-        if len(self.vertexSet) <= len(vertexSet):
+        if not self.initialized or len(self.vertexSet) > len(vertexSet):
+            self.initialized = True
             self.__updateVertexSet(vertexSet)
             self.__updateTrace(len(vertexSet))
         self.lock.release()

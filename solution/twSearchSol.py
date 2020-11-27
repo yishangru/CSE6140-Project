@@ -39,17 +39,16 @@ def greedy(graph):
     return vc
 
 
-# check whether a vertex set cover all edges
-def checkCoverage(graph, vertexSet):
-    adjacent_matrix = graph.adjacent_matrix
-
-    covered_edge = 0
-    for vertex in vertexSet:
-        covered_edge += len(adjacent_matrix[vertex])
-        for neighbor in adjacent_matrix[vertex]:
-            if (neighbor in vertexSet) and (neighbor > vertex):
-                covered_edge -= 1
-    return True if covered_edge == graph.edge else False
+# check whether a vertex set cover all edges, return uncovered edges, edgeWeight as dict[node1][node2] = weight
+def checkCoverage(edgeWeight, vertexSet):
+    uncovered_edge = list()
+    for node in edgeWeight.keys():
+        if node in vertexSet:
+            continue
+        for neighbor in edgeWeight[node].keys():
+            if neighbor not in vertexSet:
+                uncovered_edge.append((node, neighbor))
+    return uncovered_edge
 
 
 class TWSearchSol(Solution):
@@ -63,16 +62,33 @@ class TWSearchSol(Solution):
         # Author: Cai, Shaowei, Jinkun Lin, and Kaile Su.
         # In Proceedings of the Twenty-Ninth AAAI Conference on Artificial Intelligence, pp. 1107-1113. 2015.
 
-        step = 0
-        # initialize edge weights and vertex weights
+        adjacent_matrix = self.graph.adjacent_matrix
 
-        # get initial solution using approximate greedy
+        # initialize vertex weights
+        self.vertex_weights = dict()
+        for node in adjacent_matrix.keys():
+            self.vertex_weights[node] = 0
+
+        # initialize edge weights, reference [node1][node2], where node1 < node2
+        self.edge_weights = dict()
+        for node in adjacent_matrix.keys():
+            self.edge_weights[node] = dict()
+            for neighbor in adjacent_matrix[node]:
+                if neighbor > node:
+                    self.edge_weights[node][neighbor] = 1
+
+        # get initial solution using approximate greedy, possible move to sub thread
         current_solution = greedy(graph=self.graph)
         self.updateSolution(vertexSet=current_solution)
 
         while self.getVCSize() > self.parameterDict["opt"]:
-            print(checkCoverage(self.graph, current_solution))
-            break
+            uncovered_edge = checkCoverage(self.graph, current_solution)
+
+            # check whether new solution found
+            if len(uncovered_edge) == 0:
+                self.updateSolution(vertexSet=current_solution)
+
+
 
 
 def mini_test_ls(graphPath):
