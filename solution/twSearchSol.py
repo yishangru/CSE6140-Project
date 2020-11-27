@@ -126,7 +126,7 @@ class TWSearchSol(Solution):
                         uncover_edges.append((select_node, neighbor))
 
             # choose an uncovered edges randomly, add node to solution
-            select_edge = random.randrange(len(uncover_edges))
+            select_edge = uncover_edges[random.randrange(len(uncover_edges))]
             add_node = self.chooseAddNode(select_edge)
             self.addNode(add_node)
 
@@ -237,9 +237,11 @@ class TWSearchSol(Solution):
                         score += edgeWeights[node][neighbor]
                     elif neighbor < node:
                         score += edgeWeights[neighbor][node]
+            return score
 
         # calculate lost if add
-        score1, score2 = calculateScore(node1), calculateScore(node2)
+        score1 = calculateScore(node1, self.current_solution, adjacent_matrix, self.edge_weights)
+        score2 = calculateScore(node2, self.current_solution, adjacent_matrix, self.edge_weights)
 
         if score1 < score2:
             return node1
@@ -261,7 +263,7 @@ def mini_test_ls(graphPath):
     graph_instance = graphPath.split("/")[-1].split(".")[0]
 
     sol = TWSearchSol(graph=graph,
-                      randomSeed=0,
+                      randomSeed=123,
                       startTime=time.time(),
                       parameterDict={"graph_name": graph_instance,
                                      "opt": optimalVC[graph_instance] if graph_instance in optimalVC.keys() else -1})
