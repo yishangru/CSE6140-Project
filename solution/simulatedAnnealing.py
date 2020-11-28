@@ -1,5 +1,5 @@
 """
-This is a solution retrieved using approximate Sol.
+This is a solution retrieved using simulated annealing.
 """
 import math
 import random
@@ -31,7 +31,11 @@ class SimulatedAnnealing(Solution):
         while i < self.steps:
             j = 0
             # print(self.graph.node, len(self.coveredVerticesList))
-            while j < (self.graph.node - len(self.coveredVerticesList) - 1):
+            stepsBeforeCooling = self.graph.node - len(self.coveredVerticesList)
+            while stepsBeforeCooling > 300 and stepsBeforeCooling > self.steps / 70:
+                stepsBeforeCooling /= 2
+            print(stepsBeforeCooling)
+            while j < stepsBeforeCooling:
                 j += 1
 
                 # newCoveredList = copy.deepcopy(self.coveredVerticesList)
@@ -40,7 +44,8 @@ class SimulatedAnnealing(Solution):
 
                 while len(self.uncoveredEdgesList) == 0:
                     print("yo!")
-                    self.returnVertices = copy.deepcopy(self.coveredVerticesList)
+                    if len(self.returnVertices) > len(self.coveredVerticesList):
+                        self.returnVertices = copy.deepcopy(self.coveredVerticesList)
                     vertexToRemove = random.choice(self.coveredVerticesList)
                     neighborVertices = self.graph.adjacent_matrix[vertexToRemove]
                     for neighbor in neighborVertices:
