@@ -1,8 +1,15 @@
-# CSE6140-Project
-Team project for CSE6140 Gatech
+# CSE6140-Project: Minimum Vertex Cover
+*Rao Fu, Huizi Shao, Shangru Yi, Zhe Zhou*
+ 
+Team project for CSE6140 20'Fall in Georgia Institution of Technology - 
+The Minimum Vertex Cover (**MVC**) problem is a typical NP-complete problem that plays an significant role 
+in many practical applications such as operations research, network security, computational biology and parallel machine scheduling. 
+In this project, four algorithms, i.e. Branch-and-Bound (BnB), Max Degree Greedy Approximation, 
+Two Weighting Local Search (Cai, Shaowei, etc. AAAI'15), Simulated Annealing are implemented to obtain the minimum vertex cover (MVC). 
+Please refer to ``/doc/ProjectDescription.pdf`` and ``/doc/report.pdf`` for project details.
 
 ## Install Python Dependencies for Local Running
-This project use Python 3+. We recommend to use python virtual environment to avoid possible dependency conflicts.
+This project use Python 3+ (3.7.4 for implementation). We recommend to use python virtual environment to avoid possible dependency conflicts.
 
 Following shell snippet can be used to create a local virtual environment.
 
@@ -25,7 +32,8 @@ For linux / MacOS:
 After the virtual environment is created and activated, use following command to run scripts.
 ```shell script
 python main.py -inst <filePath> -alg [BnB|Approx|LS1|LS2] -time <cutoff in seconds> -seed <random seed>
-# see more usage with -h, filePath example: ./data/Data/dummy1.graph
+# see more usage with -h (batch run, expeirment repeat, solution completeness check, and etc. 
+# filePath example (relative path): ./data/Data/dummy1.graph
 ```
 If you install new package to the environment, **make sure you update `dependencies.txt` with correct package name and version, and commit**. 
 Just add the main package with version to `dependencies.txt` should be fine. Refer to `dependencies.txt` for example dependencies. 
