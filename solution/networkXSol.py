@@ -6,6 +6,7 @@ from solution.solution import Solution
 import networkx as nx
 from networkx.algorithms.approximation.vertex_cover import min_weighted_vertex_cover
 
+
 class NetworkXSol(Solution):
     def __init__(self, graph, randomSeed, startTime, parameterDict):
         super().__init__(graph, randomSeed, startTime)
@@ -21,5 +22,7 @@ class NetworkXSol(Solution):
             for neighbor in adjacent_matrix[node]:
                 if neighbor > node:
                     graph.add_edge(node, neighbor)
+
         mvc = min_weighted_vertex_cover(graph)
+        print("NetworkX solution size: " + str(len(mvc)))
         self.updateSolution(mvc)
