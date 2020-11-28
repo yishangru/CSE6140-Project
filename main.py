@@ -89,7 +89,7 @@ def main():
         # add graph name, and optimal for cutoff
         graph_instance = graph_path.split("/")[-1].split(".")[0]
         # print(args.params[1:-1] == '{"T":0.9,"steps":10000,"alpha":0.999}')
-        param_json = json.loads(args.params[1:-1])
+        param_json = json.loads(args.params[1:-1] if args.params != "{}" else args.params)
         param_json["graph_name"] = graph_instance
         param_json["opt"] = optimalVC[graph_instance] if graph_instance in optimalVC.keys() else 0
 
