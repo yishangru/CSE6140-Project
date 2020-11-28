@@ -1,7 +1,7 @@
 # CSE6140-Project: Minimum Vertex Cover
 *Rao Fu, Huizi Shao, Shangru Yi, Zhe Zhou*
  
-Team project for **CSE6140 (FALL 2020)** in ***Georgia Institution of Technology***
+Team project repo for **CSE6140 (FALL 2020)** in ***Georgia Institution of Technology***
  
 The Minimum Vertex Cover (**MVC**) problem is a typical NP-complete problem that plays a significant role 
 in many practical applications such as operation research, network security, computational biology and parallel machine scheduling. 
