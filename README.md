@@ -13,7 +13,6 @@ Please refer to ``/doc/ProjectDescription.pdf`` and ``/doc/report.pdf`` for proj
 This project use Python 3+ (3.7.4 for implementation). We recommend to use python virtual environment to avoid possible dependency conflicts.
 
 Following shell snippet can be used to create a local virtual environment.
-
 ```shell script
 For windows:
   cmd cd to current directory (../CSE6140-Project/)
@@ -33,18 +32,17 @@ For linux / MacOS:
 After the virtual environment is created and activated, use following command to run scripts.
 ```shell script
 python main.py -inst <filePath> -alg [BnB|Approx|LS1|LS2] -time <cutoff in seconds> -seed <random seed>
-# see more usage with -h (batch run, expeirment repeat, solution completeness check, etc. 
+# see more usage with -h (batch run, experiment repeat, solution completeness check, etc. 
 # filePath example (relative path): ./data/Data/dummy1.graph
 ```
+
 If you install new package to the environment, **make sure you update `dependencies.txt` with correct package name and version, and commit**. 
 Just add the main package with version to `dependencies.txt` should be fine. Refer to `dependencies.txt` for example dependencies. 
 
 Following shell snippet can be used to retrieve installed package lists.
-
 ```shell script
 pip freeze  # get current installed packages and version info
 ```
-
 
 
 ## Paper Reference Lists
