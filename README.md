@@ -1,11 +1,12 @@
 # CSE6140-Project: Minimum Vertex Cover
 *Rao Fu, Huizi Shao, Shangru Yi, Zhe Zhou*
  
-Team project for CSE6140 20'Fall in Georgia Institution of Technology - 
-The Minimum Vertex Cover (**MVC**) problem is a typical NP-complete problem that plays an significant role 
-in many practical applications such as operations research, network security, computational biology and parallel machine scheduling. 
+Team project for **CSE6140 (FALL 2020)** in ***Georgia Institution of Technology***
+ 
+The Minimum Vertex Cover (**MVC**) problem is a typical NP-complete problem that plays a significant role 
+in many practical applications such as operation research, network security, computational biology and parallel machine scheduling. 
 In this project, four algorithms, i.e. Branch-and-Bound (BnB), Max Degree Greedy Approximation, 
-Two Weighting Local Search (Cai, Shaowei, etc. AAAI'15), Simulated Annealing are implemented to obtain the minimum vertex cover (MVC). 
+Two Weighting Local Search (Cai, Shaowei, etc. AAAI'15), Simulated Annealing Local Search are implemented to obtain the minimum vertex cover (MVC). 
 Please refer to ``/doc/ProjectDescription.pdf`` and ``/doc/report.pdf`` for project details.
 
 ## Install Python Dependencies for Local Running
