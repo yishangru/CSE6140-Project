@@ -6,7 +6,7 @@ import random
 import copy
 
 from solution.solution import Solution
-
+# python main.py -inst ./data/DATA/power.graph -alg LS2 -seed 1234 -time 60 -params '{\"T\":0.5,\"steps\":10000,\"alpha\":0.95}'
 class SimulatedAnnealing(Solution):
     def __init__(self, graph, randomSeed, startTime, parameterDict):
         super().__init__(graph, randomSeed, startTime)
@@ -21,70 +21,94 @@ class SimulatedAnnealing(Solution):
         self.coveredVerticesList = list(self.coveredVerticesSet)  # a set of covered(used) vertices
         self.globalBestVC = copy.deepcopy(self.coveredVerticesList)
         # self.myGraph = copy.deepcopy(self.graph) # this graph will be modified
-        self.myGraph = self.initGraph() # this graph will be modified
+        self.uncoveredEdgesList = []
+        self.returnVertices = copy.deepcopy(self.coveredVerticesList)
 
     def run(self):
         # Main loop here
-        for _ in range(self.steps):
-            current_edge = self.myGraph.edge
-            # print(current_edge)
-            # If there are remaining edges, then there are two actions:
-            # 1. add an unused vertex with some probability
-            # 2. remove an used vertex, then add an unused vertex (switch a pair of vertices)
-            # Summary: With some probability we remove a vertex used. And we always add a random unused vertex
-            # Update: only do add in current version
-            if current_edge > 0:
-                # with some probability we remove an covered vertex
-                # probToRemove = 0.2 * (1 - self.T)
-                # self.randomlyRemoveCoveredVertex(probToRemove)
-                # we always add a random unsed vertex
-                oldEdge = self.myGraph.edge
-                added = self.randomlyAddUncoveredVertex(1)
-                newEdge = self.myGraph.edge
-                if newEdge == oldEdge:
-                    # with probability (1-T) we don't want to do this
-                    probWithT = random.uniform(0, 1)
-                    if probWithT >= self.T:
-                        self.removeCoveredVertex(added) # reverse the operation
-                    # with probability T we keep this worse solution
+        i = 0
+        # for _ in range(self.steps):
+        while i < self.steps:
+            j = 0
+            # print(self.graph.node, len(self.coveredVerticesList))
+            while j < (self.graph.node - len(self.coveredVerticesList) - 1):
+                j += 1
 
-            # If all edges are covered, two possible actions:
-            # 1. Remove an used vertex
-            # 2. Switch an used vertex with another (remove then add)
-            # Summary: With some probability we add an vertex unused. But we always remove an used vertex.
-            # Update: only do remove in current version
-            else:
-                # probToAdd = 0.15
-                # self.randomlyAddUncoveredVertex(probToAdd)
-                # remove a vertex
-                oldEdge = self.myGraph.edge
-                removed = self.randomlyRemoveCoveredVertex(1)
-                newEdge = self.myGraph.edge
-                if newEdge > oldEdge:
-                    # with probability (1-T) we don't want to do this
-                    probWithT = random.uniform(0, 1)
-                    if probWithT >= self.T:
-                        self.addUncoveredVertex(removed) # reverse the operation
-                    # with probability T we keep this worse solution
+                # newCoveredList = copy.deepcopy(self.coveredVerticesList)
+                # newCoveredSet = copy.deepcopy(self.coveredVerticesSet)
+                # print(self.uncoveredEdgesList)
 
+                while len(self.uncoveredEdgesList) == 0:
+                    print("yo!")
+                    self.returnVertices = copy.deepcopy(self.coveredVerticesList)
+                    vertexToRemove = random.choice(self.coveredVerticesList)
+                    neighborVertices = self.graph.adjacent_matrix[vertexToRemove]
+                    for neighbor in neighborVertices:
+                        if neighbor not in self.coveredVerticesSet:
+                            self.uncoveredEdgesList.append((vertexToRemove, neighbor))
+                            self.uncoveredEdgesList.append((neighbor, vertexToRemove))
+
+                    self.coveredVerticesSet.remove(vertexToRemove)
+                    self.coveredVerticesList.remove(vertexToRemove)
+
+                currentCoveredList = copy.deepcopy(self.coveredVerticesList)
+                currentCoveredSet = copy.deepcopy(self.coveredVerticesSet)
+                currentUncoveredEdges = copy.deepcopy(self.uncoveredEdgesList)
+
+                vertexToRemove = random.choice(self.coveredVerticesList)
+                neighborVertices = self.graph.adjacent_matrix[vertexToRemove]
+                for neighbor in neighborVertices:
+                    if neighbor not in self.coveredVerticesSet:
+                        self.uncoveredEdgesList.append((vertexToRemove, neighbor))
+                        self.uncoveredEdgesList.append((neighbor, vertexToRemove))
+
+                self.coveredVerticesSet.remove(vertexToRemove)
+                self.coveredVerticesList.remove(vertexToRemove)
+
+                # Randomly select an uncovered edge to add
+                edgeToAdd = random.choice(self.uncoveredEdgesList)
+                a, b = edgeToAdd
+                vertexToAdd = a if a in self.coveredVerticesSet else b
+
+                self.coveredVerticesSet.add(vertexToAdd)
+                self.coveredVerticesList.append(vertexToAdd)
+
+                for neighbor in self.graph.adjacent_matrix[vertexToAdd]:
+                    if neighbor not in self.coveredVerticesSet:
+                        self.uncoveredEdgesList.remove((vertexToAdd, neighbor))
+                        self.uncoveredEdgesList.remove((neighbor, vertexToAdd))
+
+                oldEdgeLen = len(currentUncoveredEdges) / 2
+                newEdgeLen = len(self.uncoveredEdgesList) / 2
+
+                if oldEdgeLen < newEdgeLen: # we are given a worse situation
+
+                    threshold = math.exp((oldEdgeLen - newEdgeLen) / self.T)
+                    prob = random.uniform(0, 1)
+
+                    if prob > threshold: # reject the worse solution
+                        self.coveredVerticesSet = currentCoveredSet
+                        self.coveredVerticesList = currentCoveredList
+                        self.uncoveredEdgesList = currentUncoveredEdges
+
+            i += j
             self.T = self.T * self.alpha
-            self.T = max(self.T, 0.005)
 
-
-            # update globalMax here
             # ==== TODO ======
-            if self.myGraph.edge == 0 and len(self.globalBestVC) == 0 or len(self.globalBestVC) > len(self.coveredVerticesList):
-                self.globalBestVC = copy.deepcopy(self.coveredVerticesList)
+            # if self.myGraph.edge == 0 and len(self.globalBestVC) > len(self.coveredVerticesList):
+            #     self.globalBestVC = copy.deepcopy(self.coveredVerticesList)
+            # if len(self.uncoveredEdgesList) == 0 and len(self.globalBestVC) > len(self.coveredVerticesList):
+            #     self.globalBestVC = copy.deepcopy(self.coveredVerticesList)
 
         # vc = self.coveredVerticesList # get the final vertexSet
-        self.updateSolution(vertexSet=self.globalBestVC)
+        self.updateSolution(vertexSet=self.returnVertices)
 
-    # # override parent method
+
     # def run(self):
     #     # Main loop here
     #     for _ in range(self.steps):
     #         current_edge = self.myGraph.edge
-    #         # print(current_edge)
+    #         print(current_edge)
     #         # If there are remaining edges, then there are two actions:
     #         # 1. add an unused vertex with some probability
     #         # 2. remove an used vertex, then add an unused vertex (switch a pair of vertices)
@@ -125,15 +149,17 @@ class SimulatedAnnealing(Solution):
     #                 # with probability T we keep this worse solution
     #
     #         self.T = self.T * self.alpha
-    #         self.T = max(self.T, 0.001)
+    #         # self.T = max(self.T, 0.005)
+    #
     #
     #         # update globalMax here
     #         # ==== TODO ======
-    #         if self.myGraph.edge == 0 and len(self.globalBestVC) == 0 or len(self.globalBestVC) > len(self.coveredVerticesList):
+    #         if self.myGraph.edge == 0 and len(self.globalBestVC) > len(self.coveredVerticesList):
     #             self.globalBestVC = copy.deepcopy(self.coveredVerticesList)
     #
     #     # vc = self.coveredVerticesList # get the final vertexSet
     #     self.updateSolution(vertexSet=self.globalBestVC)
+
 
     def randomlyRemoveCoveredVertex(self, probToRemove):
         rand = random.uniform(0, 1)
