@@ -19,7 +19,7 @@ class SimulatedAnnealing(Solution):
         # useful stuff
         self.coveredVerticesSet = self.greedy(copy.deepcopy(self.graph)) # a list of covered(used) vertices
         self.coveredVerticesList = list(self.coveredVerticesSet)  # a set of covered(used) vertices
-        self.globalBestVC = copy.deepcopy(self.coveredVerticesList)
+        # self.globalBestVC = copy.deepcopy(self.coveredVerticesList)
         # self.myGraph = copy.deepcopy(self.graph) # this graph will be modified
         self.uncoveredEdgesList = []
         self.returnVertices = copy.deepcopy(self.coveredVerticesList)
@@ -34,41 +34,19 @@ class SimulatedAnnealing(Solution):
             stepsBeforeCooling = self.graph.node - len(self.coveredVerticesList)
             while stepsBeforeCooling > 300 and stepsBeforeCooling > self.steps / 70:
                 stepsBeforeCooling /= 2
-            print(stepsBeforeCooling)
             while j < stepsBeforeCooling:
                 j += 1
 
-                # newCoveredList = copy.deepcopy(self.coveredVerticesList)
-                # newCoveredSet = copy.deepcopy(self.coveredVerticesSet)
-                # print(self.uncoveredEdgesList)
-
                 while len(self.uncoveredEdgesList) == 0:
-                    print("yo!")
                     if len(self.returnVertices) > len(self.coveredVerticesList):
                         self.returnVertices = copy.deepcopy(self.coveredVerticesList)
-                    vertexToRemove = random.choice(self.coveredVerticesList)
-                    neighborVertices = self.graph.adjacent_matrix[vertexToRemove]
-                    for neighbor in neighborVertices:
-                        if neighbor not in self.coveredVerticesSet:
-                            self.uncoveredEdgesList.append((vertexToRemove, neighbor))
-                            self.uncoveredEdgesList.append((neighbor, vertexToRemove))
-
-                    self.coveredVerticesSet.remove(vertexToRemove)
-                    self.coveredVerticesList.remove(vertexToRemove)
+                    self.randomlyRemoveCoveredVertexToEdge()
 
                 currentCoveredList = copy.deepcopy(self.coveredVerticesList)
                 currentCoveredSet = copy.deepcopy(self.coveredVerticesSet)
                 currentUncoveredEdges = copy.deepcopy(self.uncoveredEdgesList)
 
-                vertexToRemove = random.choice(self.coveredVerticesList)
-                neighborVertices = self.graph.adjacent_matrix[vertexToRemove]
-                for neighbor in neighborVertices:
-                    if neighbor not in self.coveredVerticesSet:
-                        self.uncoveredEdgesList.append((vertexToRemove, neighbor))
-                        self.uncoveredEdgesList.append((neighbor, vertexToRemove))
-
-                self.coveredVerticesSet.remove(vertexToRemove)
-                self.coveredVerticesList.remove(vertexToRemove)
+                self.randomlyRemoveCoveredVertexToEdge()
 
                 # Randomly select an uncovered edge to add
                 edgeToAdd = random.choice(self.uncoveredEdgesList)
@@ -83,12 +61,12 @@ class SimulatedAnnealing(Solution):
                         self.uncoveredEdgesList.remove((vertexToAdd, neighbor))
                         self.uncoveredEdgesList.remove((neighbor, vertexToAdd))
 
-                oldEdgeLen = len(currentUncoveredEdges) / 2
-                newEdgeLen = len(self.uncoveredEdgesList) / 2
+                oldEdgeLen = len(currentUncoveredEdges)
+                newEdgeLen = len(self.uncoveredEdgesList)
 
                 if oldEdgeLen < newEdgeLen: # we are given a worse situation
 
-                    threshold = math.exp((oldEdgeLen - newEdgeLen) / self.T)
+                    threshold = math.exp((oldEdgeLen - newEdgeLen) / (2 * self.T))
                     prob = random.uniform(0, 1)
 
                     if prob > threshold: # reject the worse solution
@@ -108,6 +86,16 @@ class SimulatedAnnealing(Solution):
         # vc = self.coveredVerticesList # get the final vertexSet
         self.updateSolution(vertexSet=self.returnVertices)
 
+    def randomlyRemoveCoveredVertexToEdge(self):
+        vertexToRemove = random.choice(self.coveredVerticesList)
+        neighborVertices = self.graph.adjacent_matrix[vertexToRemove]
+        for neighbor in neighborVertices:
+            if neighbor not in self.coveredVerticesSet:
+                self.uncoveredEdgesList.append((vertexToRemove, neighbor))
+                self.uncoveredEdgesList.append((neighbor, vertexToRemove))
+
+        self.coveredVerticesSet.remove(vertexToRemove)
+        self.coveredVerticesList.remove(vertexToRemove)
 
     # def run(self):
     #     # Main loop here
