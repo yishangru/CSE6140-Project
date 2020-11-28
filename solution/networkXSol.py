@@ -2,8 +2,9 @@
 This is a solution retrieved using networkX.
 """
 
-import time
 from solution.solution import Solution
+import networkx as nx
+from networkx.algorithms.approximation.vertex_cover import min_weighted_vertex_cover
 
 class NetworkXSol(Solution):
     def __init__(self, graph, randomSeed, startTime, parameterDict):
@@ -13,7 +14,12 @@ class NetworkXSol(Solution):
     # override parent method
     def run(self):
         # actual algorithm, update current best solution
-        self.updateVertexSet({1, 2, 3})
-        self.updateTrace(4)
-        time.sleep(1)
-
+        graph = nx.Graph()
+        adjacent_matrix = self.graph.adjacent_matrix
+        graph.add_nodes_from(list(adjacent_matrix.keys()))
+        for node in adjacent_matrix.keys():
+            for neighbor in adjacent_matrix[node]:
+                if neighbor > node:
+                    graph.add_edge(node, neighbor)
+        mvc = min_weighted_vertex_cover(graph)
+        self.updateSolution(mvc)
