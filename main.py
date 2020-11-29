@@ -48,7 +48,7 @@ def main():
                         help="check solution completeness")
     parser.add_argument('-ba', '--batchRun', action="store_true", default=False,
                         help="run same setting for each data graph")
-    parser.add_argument('-params', type=str, default="{}",
+    parser.add_argument('-params', type=str, default="'{}'",
                         help="parameter string for algorithm parameter setting in JSON, "
                              "e.g. '{\"para1\": 3, \"para2\": [\"str\", 1, 3.5]}'")
 
@@ -89,7 +89,7 @@ def main():
         # add graph name, and optimal for cutoff
         graph_instance = graph_path.split("/")[-1].split(".")[0]
         # print(args.params[1:-1] == '{"T":0.9,"steps":10000,"alpha":0.999}')
-        param_json = json.loads(args.params[1:-1] if args.params != "{}" else args.params)
+        param_json = json.loads(args.params[1:-1])
         param_json["graph_name"] = graph_instance
         param_json["opt"] = optimalVC[graph_instance] if graph_instance in optimalVC.keys() else 0
 
