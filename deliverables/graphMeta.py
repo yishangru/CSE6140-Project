@@ -100,6 +100,3 @@ def main():
                       "star2.graph"]
     for graph_name in graphCandidate:
         structureVisualization(graph_name)
-
-
-main()
