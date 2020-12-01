@@ -15,9 +15,9 @@ sample_ratio_dict = {
     "email.graph": 0.5,
     "power.graph": 0.2,
     "hep-th.graph": 0.15,
-    "star.graph": 0.1,
-    "star2.graph": 0.1,
     "as-22july06.graph": 0.1,
+    "star.graph": 0.1,
+    "star2.graph": 0.08,
 }
 
 layout_dict = {
@@ -29,7 +29,6 @@ layout_dict = {
     "star2.graph": "kamada",
     "as-22july06.graph": "fruchterman",
 }
-
 
 def structureVisualization(graphName):
     graph = readData(os.path.join(graphDirectory, graphName))
@@ -73,7 +72,7 @@ def structureVisualization(graphName):
     pos_dict = {"spring": nx.spring_layout, "kamada": nx.kamada_kawai_layout, "fruchterman": nx.fruchterman_reingold_layout}
 
     pos = layout_dict[graphName]
-    parameter = {"G": graphNX, "scale": 3}
+    parameter = {"G": graphNX, "scale": 4}
     graph_pos = pos_dict[pos](**parameter)
     nx.draw_networkx_nodes(graphNX, graph_pos, node_size=options["node_size"],
                            alpha=options["node_alpha"], node_color=[colorMapping(len(adjacent_matrix[node])) for node in graphNX])
