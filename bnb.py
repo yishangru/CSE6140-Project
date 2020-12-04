@@ -1,5 +1,5 @@
 '''
-Executable: python Code/BnB_group_25.py -inst Data/karate.graph -alg BnB -time 600 -seed 100 
+To Run: python <bnb.py> -inst <data file> -alg BnB -time 600 -seed 100 
 '''
 import networkx as nx
 import operator
