@@ -11,9 +11,9 @@ class SimulatedAnnealing(Solution):
     def __init__(self, graph, randomSeed, startTime, parameterDict):
         super().__init__(graph, randomSeed, startTime)
         self.parameterDict = parameterDict
-        self.T = parameterDict["T"] # Temperature
-        self.steps = parameterDict["steps"] # max #iteration
-        self.alpha = parameterDict["alpha"] # cooling factor
+        self.T = parameterDict["T"] if "T" in parameterDict.keys() else 0.5  # Temperature
+        self.steps = parameterDict["steps"] if "steps" in parameterDict.keys() else 10000  # max #iteration
+        self.alpha = parameterDict["alpha"] if "alpha" in parameterDict.keys() else 0.95  # cooling factor
         random.seed(randomSeed) # set seeds
 
         # useful stuff
