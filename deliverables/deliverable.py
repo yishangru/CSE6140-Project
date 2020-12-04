@@ -349,8 +349,80 @@ def boxplot_runtime(graph_instance, alg, trace):
 
 
 # plot boxplot for sol size
-def boxplot_solution(graph_instance):
-    pass
+def boxplot_solution(graph_instance, alg_list):
+    result = list()
+    for alg in alg_list:
+        alg_result = list()
+        trace = readTrace(graph_instance, alg)
+        for seed in trace.keys():
+            alg_result.append(trace[seed][-1][1])
+        result.append(alg_result)
+
+    print(result)
+
+    # Create an axes instance
+    ax = plt.gca()
+
+    # add patch_artist=True option to ax.boxplot()
+    bp = ax.boxplot(result, widths=0.8)
+
+    # change outline color, fill color and linewidth of the boxes
+    for i, box in enumerate(bp['boxes']):
+        # change outline color
+        box.set(color=palette[i], linewidth=2)
+
+    # change color and linewidth of the whiskers
+    for i, whisker in enumerate(bp['whiskers']):
+        whisker.set(color='black', linewidth=4)
+
+    # change color and linewidth of the caps
+    for i, cap in enumerate(bp['caps']):
+        cap.set(color=palette[i // 2], linewidth=4)
+
+    # change color and linewidth of the medians
+    for median in bp['medians']:
+        median.set(color='#b2df8a', linewidth=2)
+
+    # change the style of fliers and their fill
+    for flier in bp['fliers']:
+        flier.set(marker='o', color='#e7298a', markersize=5, markerfacecolor='None', markeredgewidth=3)
+
+    for axis in [ax.xaxis, ax.yaxis]:
+        axis.set_tick_params(size=5, width=2)
+        axis.set_major_formatter(ScalarFormatter())
+    for axis in ['top', 'bottom', 'left', 'right']:
+        ax.spines[axis].set_linewidth(2)
+    ax.grid(color="black", linestyle="--", linewidth=1.8, alpha=0.9)
+    ax.set_xticklabels(alg_list)
+
+    plt.title("VC Box Plots (cutoff=600s) - " + graph_instance, loc='center', fontdict=title_font, pad=10)
+    plt.ylabel("Vertex Cover", fontdict=label_font)
+    plt.tight_layout()
+
+    instance = 'box-result-' + graph_instance
+    plt.savefig(instance + '.png', dpi=600)
+    plt.show()
+
+    def get_box_plot_data(labels, bp):
+        rows_list = []
+
+        for i in range(len(labels)):
+            dict1 = {}
+            dict1['label'] = labels[i]
+            dict1['lower_whisker'] = bp['whiskers'][i * 2].get_ydata()[1]
+            dict1['lower_quartile'] = bp['boxes'][i].get_ydata()[1]
+            dict1['median'] = bp['medians'][i].get_ydata()[1]
+            dict1['upper_quartile'] = bp['boxes'][i].get_ydata().max()
+            dict1['upper_whisker'] = bp['whiskers'][(i * 2) + 1].get_ydata()[1]
+            rows_list.append(dict1)
+
+        return pandas.DataFrame(rows_list)
+
+    print("Box Plot Run Time Meta:")
+    meta_info = str(get_box_plot_data(alg_list, bp))
+    print(meta_info)
+    with open(instance + ".meta", mode="w", encoding="utf-8") as meta:
+        meta.write(meta_info + "\n")
 
 
 def main():
@@ -382,7 +454,9 @@ def main():
             # plot box for result
             boxplot_runtime(plot_graph, plot_alg, trace_result)
 
-            # plot box for run time
+    # plot box for run time
+    for graph in graph_list:
+        boxplot_solution(graph, alg_list)
 
 
 parameter_dict = {
@@ -433,15 +507,5 @@ parameter_dict = {
 }
 
 
-# read data random seed: trace list
-plot_graph, plot_alg = "power", "LS2"
-trace_result = readTrace(plot_graph, plot_alg)
-
-# box plot time
-boxplot_runtime(plot_graph, plot_alg, trace_result)
-
-"""
-
 if __name__ == '__main__':
     main()
-"""
