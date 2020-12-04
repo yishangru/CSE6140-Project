@@ -62,17 +62,19 @@ Generate another thread:
 
 
 def solutionExecutor(graph, solution, timeLimit, randomSeed, parameterDict, startTime):
-
+    
+  
     from solution.networkXSol import NetworkXSol
     from solution.approxSol import ApproxSol, ApproxUpdateSol
     from solution.twSearchSol import TWSearchSol
     from solution.simulatedAnnealing import SimulatedAnnealing
-
+    from solution.BnBSol import BnBSol
     # graph is a deep copy, thread-safe to change
     solution_thread = NetworkXSol(graph=graph, randomSeed=randomSeed, startTime=startTime,
                                   parameterDict=parameterDict)
     if solution == "BnB":
-        pass
+        solution_thread = BnBSol(graph=graph, randomSeed=randomSeed, startTime=startTime,
+                                 parameterDict=parameterDict)
     elif solution == "LS1":
         solution_thread = TWSearchSol(graph=graph, randomSeed=randomSeed, startTime=startTime,
                                       parameterDict=parameterDict)
