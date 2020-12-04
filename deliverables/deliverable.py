@@ -29,6 +29,7 @@ def extractResult(graph_instance, alg):
             continue
         shutil.copyfile(os.path.join(original_result_directory, result), os.path.join(target_result_directory, result))
 
+
 optimalVC = {
     "jazz": 158,
     "karate": 14,
@@ -63,9 +64,7 @@ plot_font = {
     'size': 12,
 }
 
-
 markers = ["o", "v", "s", "p", "X", "*", "P", "H", "d"]
-
 matplotlib.rc('font', **plot_font)
 plt.style.use('seaborn-bright')
 palette = ["#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#a65628"]  # palette = plt.get_cmap('Set1')
@@ -102,7 +101,7 @@ def readTrace(graph_instance, alg):
 
 # plot QRTD
 def qrtd(graph_instance, alg, trace):
-    quality_list = parameter_dict["quality"][graph_instance][alg]
+    quality_list = parameter_dict["qrtd"]["quality"][graph_instance][alg]
 
     # calculate quality data
     optimal = optimalVC[graph_instance]
@@ -149,7 +148,7 @@ def qrtd(graph_instance, alg, trace):
         # marker=markers[i], markersize=3, markerfacecolor='None', markeredgewidth=2
 
     # set xlim and ylim
-    min_padding, max_padding = parameter_dict["padding"][graph_instance]
+    min_padding, max_padding = parameter_dict["qrtd"]["padding"][graph_instance]
     plt.xlim([round(min_time * min_padding), round(max_time * max_padding)])
     plt.ylim([0, 1.01])
 
@@ -194,6 +193,7 @@ def main():
     for plot_graph in graph_list:
         for plot_alg in alg_list:
             extractResult(plot_graph, plot_alg)
+            time.sleep(1)
 
             trace_result = readTrace(plot_graph, plot_alg)
 
@@ -207,19 +207,21 @@ def main():
 
 
 parameter_dict = {
-    "quality": {
-        "power": {
-            "LS1": [0, 0.001, 0.003, 0.006, 0.01],
-            "LS2": [0.01, 0.015, 0.02, 0.025, 0.03]
+    "qrtd": {
+        "quality": {
+            "power": {
+                "LS1": [0, 0.001, 0.003, 0.006, 0.01],
+                "LS2": [0.01, 0.015, 0.02, 0.025, 0.03]
+            },
+            "star2": {
+                "LS1": [0, 0.001, 0.003, 0.005, 0.008, 0.01],
+                "LS2": [0.015, 0.018, 0.022, 0.026, 0.03]
+            }
         },
-        "star2": {
-            "LS1": [0, 0.001, 0.003, 0.005, 0.008, 0.01],
-            "LS2": [0.015, 0.018, 0.022, 0.026, 0.03]
+        "padding": {
+            "power": (0.98, 1.3),
+            "star2": (0.98, 1.5)
         }
-    },
-    "padding": {
-        "power": (0.98, 1.3),
-        "star2": (0.98, 1.5)
     }
 }
 
@@ -238,7 +240,3 @@ qrtd(plot_graph, plot_alg, trace_result_1)""
 
 if __name__ == '__main__':
     main()
-
-
-
-
