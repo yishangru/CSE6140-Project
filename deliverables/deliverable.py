@@ -166,6 +166,7 @@ def qrtd(graph_instance, alg, trace):
     plt.xlabel("Run Time (CPU sec)", fontdict=label_font)
     plt.ylabel("P (solve)", fontdict=label_font)
     plt.legend(loc=4, ncol=1, prop={'size': 14}, frameon=False)
+    plt.tight_layout()
     plt.savefig('QRTD-' + graph_instance + "-" + alg + '.png', dpi=600)
     plt.show()
 
@@ -197,18 +198,13 @@ def main():
             trace_result = readTrace(plot_graph, plot_alg)
 
             # plot qrtd
-            min_error = (min([min(trace_result_1[seed], key=lambda x: x[1])[1] for seed in trace_result_1.keys()]) -
+            min_error = (min([min(trace_result[seed], key=lambda x: x[1])[1] for seed in trace_result.keys()]) -
                          optimalVC[plot_graph]) / optimalVC[plot_graph]
-            max_error = (max([max(trace_result_1[seed], key=lambda x: x[1])[1] for seed in trace_result_1.keys()]) -
+            max_error = (max([max(trace_result[seed], key=lambda x: x[1])[1] for seed in trace_result.keys()]) -
                          optimalVC[plot_graph]) / optimalVC[plot_graph]
             print("Graph:\n" + "Min: " + str(min_error) + "\n" + "Max: " + str(max_error))
             qrtd(plot_graph, plot_alg, trace_result)
 
-
-"""
-if __name__ == "__main__":
-    main()
-"""
 
 parameter_dict = {
     "quality": {
@@ -228,7 +224,8 @@ parameter_dict = {
 }
 
 # read data random seed: trace list
-plot_graph, plot_alg = "star2", "LS1"
+"""
+plot_graph, plot_alg = "star2", "LS2"
 time.sleep(1)  # sleep one second
 trace_result_1 = readTrace(plot_graph, plot_alg)
 
@@ -236,7 +233,12 @@ trace_result_1 = readTrace(plot_graph, plot_alg)
 min_error = (min([min(trace_result_1[seed], key=lambda x: x[1])[1] for seed in trace_result_1.keys()]) - optimalVC[plot_graph]) / optimalVC[plot_graph]
 max_error = (max([max(trace_result_1[seed], key=lambda x: x[1])[1] for seed in trace_result_1.keys()]) - optimalVC[plot_graph]) / optimalVC[plot_graph]
 print("Graph:\n" + "Min: " + str(min_error) + "\n" + "Max: " + str(max_error))
-qrtd(plot_graph, plot_alg, trace_result_1)
+qrtd(plot_graph, plot_alg, trace_result_1)""
+"""
+
+if __name__ == '__main__':
+    main()
+
 
 
 
