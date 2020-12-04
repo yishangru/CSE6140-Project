@@ -4,6 +4,8 @@ algorithm result analysis and graph generation
 import os, shutil
 import math
 import time
+import numpy
+import pandas
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.ticker import ScalarFormatter
@@ -246,11 +248,108 @@ def sqd(graph_instance, alg, trace):
 
 # plot boxplot for runtime
 def boxplot_runtime(graph_instance, alg, trace):
-    pass
+    quality_list = parameter_dict["boxtime"]["quality"][graph_instance][alg]
+
+    optimal = optimalVC[graph_instance]
+    quality_result_list = list()
+    for i, quality in enumerate(quality_list):
+        cutoff = math.floor(quality * optimal + optimal)
+        reach = list()
+        for seed in trace.keys():
+            # binary search for expected timestamp
+            result = trace[seed]
+            start, end = 0, len(result) - 1
+            if result[start][1] <= cutoff:
+                reach.append(result[start][0])
+                continue
+            if result[end][1] > cutoff:
+                continue
+            while start < end - 1:
+                mid = (start + end) // 2
+                if result[mid][1] < cutoff:
+                    end = mid
+                elif result[mid][1] > cutoff:
+                    start = mid
+                else:
+                    end = mid
+                    break
+            reach.append(result[end][0])
+        reach.sort()
+        quality_result_list.append(reach)
+
+    # Create an axes instance
+    ax = plt.gca()
+
+    labels = [str(round(100 * quality, 1)) for quality in quality_list]
+
+    # add patch_artist=True option to ax.boxplot()
+    bp = ax.boxplot(quality_result_list, patch_artist=True)
+
+    # change outline color, fill color and linewidth of the boxes
+    for i, box in enumerate(bp['boxes']):
+        # change outline color
+        box.set(color=palette[i], linewidth=2)
+        # change fill color
+        box.set(facecolor=palette[i])
+
+    # change color and linewidth of the whiskers
+    for i, whisker in enumerate(bp['whiskers']):
+        whisker.set(color='black', linewidth=4)
+
+    # change color and linewidth of the caps
+    for i, cap in enumerate(bp['caps']):
+        cap.set(color=palette[i//2], linewidth=4)
+
+    # change color and linewidth of the medians
+    for median in bp['medians']:
+        median.set(color='#b2df8a', linewidth=2)
+
+    # change the style of fliers and their fill
+    for flier in bp['fliers']:
+        flier.set(marker='o', color='#e7298a', markersize=5, markerfacecolor='None', markeredgewidth=3)
+
+    for axis in [ax.xaxis, ax.yaxis]:
+        axis.set_tick_params(size=5, width=2)
+        axis.set_major_formatter(ScalarFormatter())
+    for axis in ['top', 'bottom', 'left', 'right']:
+        ax.spines[axis].set_linewidth(2)
+    ax.grid(color="black", linestyle="--", linewidth=1.8, alpha=0.9)
+    ax.set_xticklabels(labels)
+
+    plt.title("Run Time Box Plots (" + alg + ") - " + graph_instance, loc='center', fontdict=title_font, pad=10)
+    plt.xlabel("Relative Error (%)", fontdict=label_font)
+    plt.ylabel("Run Time (CPU sec)", fontdict=label_font)
+    plt.tight_layout()
+
+    instance = 'box-runtime-' + graph_instance + "-" + alg
+    plt.savefig(instance + '.png', dpi=600)
+    plt.show()
+
+    def get_box_plot_data(labels, bp):
+        rows_list = []
+
+        for i in range(len(labels)):
+            dict1 = {}
+            dict1['label'] = labels[i]
+            dict1['lower_whisker'] = bp['whiskers'][i * 2].get_ydata()[1]
+            dict1['lower_quartile'] = bp['boxes'][i].get_ydata()[1]
+            dict1['median'] = bp['medians'][i].get_ydata()[1]
+            dict1['upper_quartile'] = bp['boxes'][i].get_ydata().max()
+            dict1['upper_whisker'] = bp['whiskers'][(i * 2) + 1].get_ydata()[1]
+            rows_list.append(dict1)
+
+        return pandas.DataFrame(rows_list)
+
+    bp_meta = ax.boxplot(quality_result_list)
+    print("Box Plot Run Time Meta:")
+    meta_info = str(get_box_plot_data(labels, bp_meta))
+    print(meta_info)
+    with open(instance + ".meta", mode="w", encoding="utf-8") as meta:
+        meta.write(meta_info + "\n")
 
 
 # plot boxplot for sol size
-def boxplot_solution(graph_instance, alg):
+def boxplot_solution(graph_instance):
     pass
 
 
@@ -281,7 +380,7 @@ def main():
             sqd(plot_graph, plot_alg, trace_result)
 
             # plot box for result
-
+            boxplot_runtime(plot_graph, plot_alg, trace_result)
 
             # plot box for run time
 
@@ -318,22 +417,31 @@ parameter_dict = {
             "power": (0.02, 0.1),
             "star2": (0.05, 0.05)
         }
+    },
+    "boxtime": {
+        "quality": {
+            "power": {
+                "LS1": [0, 0.0005, 0.001, 0.002, 0.004],
+                "LS2": [0.005, 0.01, 0.016, 0.023, 0.03]
+            },
+            "star2": {
+                "LS1": [0, 0.0005, 0.001, 0.002, 0.004, 0.008],
+                "LS2": [0.015, 0.018, 0.022, 0.026, 0.03]
+            }
+        }
     }
 }
 
+
 # read data random seed: trace list
-plot_graph, plot_alg = "star2", "LS2"
+plot_graph, plot_alg = "power", "LS2"
 trace_result = readTrace(plot_graph, plot_alg)
 
-# plot sqd
-min_time = min([trace_result[seed][-1][0] for seed in trace_result.keys()])
-max_time = max([trace_result[seed][-1][0] for seed in trace_result.keys()])
-print("Graph:\n" + "Max Time: " + str(max_time) + "\n" + "Min Time: " + str(min_time))
-sqd(plot_graph, plot_alg, trace_result)
+# box plot time
+boxplot_runtime(plot_graph, plot_alg, trace_result)
 
 """
+
 if __name__ == '__main__':
     main()
 """
-
-
