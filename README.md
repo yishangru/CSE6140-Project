@@ -32,6 +32,7 @@ For linux / MacOS:
 After the virtual environment is created and activated, use following command to run scripts.
 ```shell script
 python main.py -inst <filePath> -alg [BnB|Approx|LS1|LS2] -time <cutoff in seconds> -seed <random seed>
+#for bnb, can try:  python <bnb.py> -inst <filePath> -alg BnB -time 600 -seed 100 . Will also works.
 # see more usage with -h (batch run, experiment repeat, solution completeness check, etc. 
 # filePath example (relative path): ./data/Data/dummy1.graph
 ```
