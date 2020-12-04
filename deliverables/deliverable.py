@@ -67,7 +67,7 @@ plot_font = {
 markers = ["o", "v", "s", "p", "X", "*", "P", "H", "d"]
 matplotlib.rc('font', **plot_font)
 plt.style.use('seaborn-bright')
-palette = ["#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#a65628"]  # palette = plt.get_cmap('Set1')
+palette = ["#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#a65628", "#f781bf", "#999999"]  # palette = plt.get_cmap('Set1')
 
 
 def readTrace(graph_instance, alg):
@@ -144,7 +144,7 @@ def qrtd(graph_instance, alg, trace):
                  color=palette[i],
                  linestyle='-.',
                  linewidth=4,
-                 label=str(quality) + "%")
+                 label=str(round(quality * 100, 1)) + "%")
         # marker=markers[i], markersize=3, markerfacecolor='None', markeredgewidth=2
 
     # set xlim and ylim
@@ -171,12 +171,81 @@ def qrtd(graph_instance, alg, trace):
 
 
 # plot SQD
-def sqd(graph_instance, alg, timestamp_list):
-    pass
+def sqd(graph_instance, alg, trace):
+    timestamp_list = parameter_dict["sqd"]["time"][graph_instance][alg]
+
+    # calculate quality data
+    optimal = optimalVC[graph_instance]
+    time_result_list = dict()
+    for i, timestamp in enumerate(timestamp_list):
+        reach = list()
+        for seed in trace.keys():
+            # binary search for reached size given timestamp
+            result = trace[seed]
+            start, end = 0, len(result) - 1
+            if result[end][0] <= timestamp:
+                reach.append(result[end][1])
+                continue
+            if result[start][0] > timestamp:
+                print("Initial Sol takes longer than " + str(timestamp) + " , seed:" + str(seed))
+                continue
+            while start < end - 1:
+                mid = (start + end) // 2
+                if result[mid][0] < timestamp:
+                    start = mid
+                elif result[mid][0] > timestamp:
+                    end = mid
+                else:
+                    start = mid
+                    break
+            reach.append(result[start][1])
+        reach.sort()
+        time_result_list[i] = reach
+
+    print(time_result_list)
+
+    max_cover_error = round(100 * (max([max(time_result_list[i]) for i in time_result_list.keys()]) - optimal)/optimal, 2)
+    min_cover_error = round(100 * (min([min(time_result_list[i]) for i in time_result_list.keys()]) - optimal)/optimal, 2)
+
+    print(max_cover_error)
+    print(min_cover_error)
+
+    # plot srd
+    for i, timestamp in enumerate(timestamp_list):
+        qualityX = [0] + [round(100 * (vc - optimal) / optimal, 2) for vc in time_result_list[i]] + \
+                   [max_cover_error]
+        probY = [0] + [round((j + 1) / len(trace), 4) for j in range(len(time_result_list[i]))] + [1]
+        plt.plot(qualityX, probY,
+                 color=palette[i],
+                 linestyle='-',
+                 linewidth=4,
+                 label=str(timestamp))
+        # marker=markers[i], markersize=3, markerfacecolor='None', markeredgewidth=2
+
+    # set xlim and ylim
+    min_padding, max_padding = parameter_dict["sqd"]["padding"][graph_instance]
+    plt.xlim([min_cover_error - min_padding, max_cover_error + max_padding])
+    plt.ylim([0, 1.01])
+
+    ax = plt.gca()
+    for axis in [ax.xaxis, ax.yaxis]:
+        axis.set_tick_params(size=5, width=2)
+        axis.set_major_formatter(ScalarFormatter())
+    for axis in ['top', 'bottom', 'left', 'right']:
+        ax.spines[axis].set_linewidth(2)
+    ax.grid(color="black", linestyle="--", linewidth=1.8, alpha=0.9)
+
+    plt.title("SQDs (" + alg + ") - " + graph_instance, loc='center', fontdict=title_font, pad=10)
+    plt.xlabel("Relative Error (%)", fontdict=label_font)
+    plt.ylabel("P (solve)", fontdict=label_font)
+    plt.legend(loc=4, ncol=1, prop={'size': 14}, frameon=False)
+    plt.tight_layout()
+    plt.savefig('SQD-' + graph_instance + "-" + alg + '.png', dpi=600)
+    plt.show()
 
 
 # plot boxplot for runtime
-def boxplot_runtime(graph_instance, alg):
+def boxplot_runtime(graph_instance, alg, trace):
     pass
 
 
@@ -198,12 +267,23 @@ def main():
             trace_result = readTrace(plot_graph, plot_alg)
 
             # plot qrtd
-            min_error = (min([min(trace_result[seed], key=lambda x: x[1])[1] for seed in trace_result.keys()]) -
+            min_error = (min([trace_result[seed][-1][1] for seed in trace_result.keys()]) -
                          optimalVC[plot_graph]) / optimalVC[plot_graph]
-            max_error = (max([max(trace_result[seed], key=lambda x: x[1])[1] for seed in trace_result.keys()]) -
+            max_error = (max([trace_result[seed][-1][1] for seed in trace_result.keys()]) -
                          optimalVC[plot_graph]) / optimalVC[plot_graph]
-            print("Graph:\n" + "Min: " + str(min_error) + "\n" + "Max: " + str(max_error))
+            print("Graph:\n" + "Min Error: " + str(min_error) + "\n" + "Max Error: " + str(max_error))
             qrtd(plot_graph, plot_alg, trace_result)
+
+            # plot sqd
+            min_time = min([trace_result[seed][-1][0] for seed in trace_result.keys()])
+            max_time = max([trace_result[seed][-1][0] for seed in trace_result.keys()])
+            print("Graph:\n" + "Max Time: " + str(max_time) + "\n" + "Min Time: " + str(min_time))
+            sqd(plot_graph, plot_alg, trace_result)
+
+            # plot box for result
+
+
+            # plot box for run time
 
 
 parameter_dict = {
@@ -220,23 +300,40 @@ parameter_dict = {
         },
         "padding": {
             "power": (0.98, 1.3),
-            "star2": (0.98, 1.5)
+            "star2": (0.98, 1.52)
+        }
+    },
+    "sqd": {
+        "time": {
+            "power": {
+                "LS1": [6, 8, 10, 16, 24, 40, 60],
+                "LS2": [40, 50, 60, 70, 80, 90, 100]
+            },
+            "star2": {
+                "LS1": [30, 40, 50, 100, 150, 200, 300],
+                "LS2": [80, 100, 125, 150, 175, 200, 225]
+            }
+        },
+        "padding": {
+            "power": (0.02, 0.1),
+            "star2": (0.05, 0.05)
         }
     }
 }
 
 # read data random seed: trace list
-"""
 plot_graph, plot_alg = "star2", "LS2"
-time.sleep(1)  # sleep one second
-trace_result_1 = readTrace(plot_graph, plot_alg)
+trace_result = readTrace(plot_graph, plot_alg)
 
-# plot qrtd
-min_error = (min([min(trace_result_1[seed], key=lambda x: x[1])[1] for seed in trace_result_1.keys()]) - optimalVC[plot_graph]) / optimalVC[plot_graph]
-max_error = (max([max(trace_result_1[seed], key=lambda x: x[1])[1] for seed in trace_result_1.keys()]) - optimalVC[plot_graph]) / optimalVC[plot_graph]
-print("Graph:\n" + "Min: " + str(min_error) + "\n" + "Max: " + str(max_error))
-qrtd(plot_graph, plot_alg, trace_result_1)""
+# plot sqd
+min_time = min([trace_result[seed][-1][0] for seed in trace_result.keys()])
+max_time = max([trace_result[seed][-1][0] for seed in trace_result.keys()])
+print("Graph:\n" + "Max Time: " + str(max_time) + "\n" + "Min Time: " + str(min_time))
+sqd(plot_graph, plot_alg, trace_result)
+
 """
-
 if __name__ == '__main__':
     main()
+"""
+
+
