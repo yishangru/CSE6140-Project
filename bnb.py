@@ -1,5 +1,6 @@
 '''
-To Run: python <bnb.py> -inst <data file> -alg BnB -time 600 -seed 100 
+Branch and Bound Algorithms
+Implement using DFS and backtracking
 '''
 import networkx as nx
 import operator
@@ -7,148 +8,136 @@ import argparse
 import time
 import os
 
-def create_graph(adj_list):
-	G = nx.Graph()
-	for i in range(len(adj_list)):
-		for j in adj_list[i]:
-			G.add_edge(i + 1, j)
-	return G
 
 def parse(datafile):
-	adj_list = []
+	adjList = []
+	graph = nx.Graph()
 	with open(datafile) as f:
-		num_vertices, num_edges, weighted = map(int, f.readline().split())
-		for i in range(num_vertices):
-			adj_list.append(map(int, f.readline().split()))
-	return adj_list
+		vertices, edges, weighted = map(int, f.readline().split())
+		for i in range(vertices):
+			adjList.append(map(int, f.readline().split()))
+	for i in range(len(adjList)):
+		for j in adjList[i]:
+			graph.add_edge(i + 1, j)
+	return graph
 
-def BnB(G, T):
-	#RECORD START TIME
-	start_time=time.time()
-	end_time=start_time
-	delta_time=end_time-start_time
+def Lowerbound(graph):
+	lb=graph.number_of_edges() / maxDdeg(graph)[1]
+	if(lb> int(lb)):
+		return int(lb)+1
+	else:
+		return int(lb)
+
+def maxDeg(g):
+    deglist_sorted=sorted(g.degree,key = lambda x:x[1],reverse=True)
+    v = deglist_sorted[0]
+    return v
+    
+
+def VCsize(VC):
+	size = 0
+	for element in VC:
+		size = size + element[1]
+	return size
+
+def bnb(G, T):
+
+	start=time.time()
+	end=start
+	timeBlock=end - start
 	times=[]
-	OptVC = []
+
+	print('Initial Global Upper Bound:', G.number_of_nodes())
+	leftG = G.copy() #frist with entire graph
+
+	optVC = []
 	CurVC = []
 	Frontier = []
-	neighbor = []
-	UpperBound = G.number_of_nodes()
-	print('Initial UpperBound:', UpperBound)
+	expand = []
+	v = maxDeg(leftG)
 
-	CurG = G.copy()
-	v = find_maxdeg(CurG)
 	Frontier.append((v[0], 0, (-1, -1)))
 	Frontier.append((v[0], 1, (-1, -1)))
 
-	while Frontier!=[] and delta_time<T:
-		(vi,state,parent)=Frontier.pop()
-		backtrack = False
-		if state == 0:
-			neighbor = CurG.neighbors(vi)
-			for node in list(neighbor):
+	bk = False
+	while Frontier!=[] and timeBlock<T:
+		bk = False
+		(vi, state, src) = Frontier.pop()
+		if state == 1:
+			leftG.remove_node(vi)
+		elif state == 0:
+			expand = leftG.neighbors(vi)
+			for node in list(expand):
+				leftG.remove_node(node)
 				CurVC.append((node, 1))
-				CurG.remove_node(node)
-		elif state == 1:
-			CurG.remove_node(vi)
+				
 		else:
 			pass
 
 		CurVC.append((vi, state))
-		CurVC_size = VC_Size(CurVC)
-		if CurG.number_of_edges() == 0:
-			if CurVC_size < UpperBound:
-				OptVC = CurVC.copy()
-				print('Current Opt VC size', CurVC_size)
-				UpperBound = CurVC_size
-				times.append((CurVC_size,time.time()-start_time))
-			backtrack = True
+		curSize = VCsize(CurVC)
+
+		if leftG.number_of_edges() == 0:
+			if VCsize(CurVC) < UpperBound:
+				optVC = CurVC.copy()
+				UpperBound = VCsize(CurVC)
+				print('Current Opt VC size', curSize)
+				times.append((curSize,time.time()-start))
+			bk = True
 				
 		else:
-			CurLB = Lowerbound(CurG) + CurVC_size
-			if CurLB < UpperBound:
-				vj = find_maxdeg(CurG)
-				Frontier.append((vj[0], 0, (vi, state)))
-				Frontier.append((vj[0], 1, (vi, state)))
+			if Lowerbound(leftG) + curSize < UpperBound:
+				vii = maxDeg(leftG)
+				Frontier.append((vii[0], 0, (vi, state)))
+				Frontier.append((vii[0], 1, (vi, state)))
 			else:
-				backtrack=True
+				bk=True
 
-
-		if backtrack==True:
+		if bk==True:
 			if Frontier != []:
-				nextnode_parent = Frontier[-1][2]
-				if nextnode_parent in CurVC:
-					
-					id = CurVC.index(nextnode_parent) + 1
+				nodeParent = Frontier[-1][2]
+				if nodeParent in CurVC:
+					id = CurVC.index(nodeParent) + 1
 					while id < len(CurVC):
-						mynode, mystate = CurVC.pop()
-						CurG.add_node(mynode)
-						curVC_nodes = list(map(lambda t:t[0], CurVC))
-						for nd in G.neighbors(mynode):
-							if (nd in CurG.nodes()) and (nd not in curVC_nodes):
-								CurG.add_edge(nd, mynode)
+						nodei, statei = CurVC.pop()
+						curNodes = list(map(lambda t:t[0], CurVC))
+						leftG.add_node(nodei)
+						for ndi in G.neighbors(nodei):
+							if (ndi in leftG.nodes()) and (ndi not in curNodes):
+								leftG.add_edge(ndi, nodei)
 
-				elif nextnode_parent == (-1, -1):
+				elif nodeParent == (-1, -1):
+					leftG = G.copy()
 					CurVC.clear()
-					CurG = G.copy()
 				else:
-					print('error in backtracking step')
+					print('Backtracking Error')
 
-		end_time=time.time()
-		delta_time=end_time-start_time
-		if delta_time>T:
-			print('Cutoff time reached')
+		end=time.time()
+		timeBlock=end-start
+		if timeBlock>T:
+			print('Time reached')
 
-	return OptVC,times
-
-#TO FIND THE VERTEX WITH MAXIMUM DEGREE IN REMAINING GRAPH
-def find_maxdeg(g):
-    deglist_sorted=sorted(g.degree,key = lambda x:x[1],reverse=True)
-    v = deglist_sorted[0]
-    return v
-
-def Lowerbound(graph):
-	lb=graph.number_of_edges() / find_maxdeg(graph)[1]
-	lb=cl(lb)
-	return lb
-
-
-def cl(d):
-    """
-        return the minimum integer that is bigger than d
-    """ 
-    if d > int(d):
-        return int(d) + 1
-    else:
-        return int(d)
-    
-
-def VC_Size(VC):
-	# VC is a tuple list, where each tuple = (node_ID, state, (node_ID, state)) vc_size is the number of nodes which has state == 1
-
-	vc_size = 0
-	for element in VC:
-		vc_size = vc_size + element[1]
-	return vc_size
+	return optVC,times
 
 
 def main(inputfile, output_dir, cutoff, randSeed):
-	adj_list = parse(inputfile)	
-	g = create_graph(adj_list)
+	g = parse(inputfile)
 
-	print('No of nodes in G:', g.number_of_nodes(),
-		  '\nNo of Edges in G:', g.number_of_edges())
+	print('Number of Nodes:', g.number_of_nodes(),
+		  '\nNumber of Edges', g.number_of_edges())
+	OptVC,times = bnb(g, cutoff)
 
-	Sol_VC,times = BnB(g, cutoff)
-	for element in Sol_VC:
+	for element in OptVC:
 		if element[1]==0:
-			Sol_VC.remove(element)
-	inputdir, inputfile = os.path.split(args.inst)
+			OptVC.remove(element)
+			
+	indir, infile = os.path.split(args.inst)
 
-	with open('.\Output\\' + inputfile.split('.')[0] + '_BnB_'+str(cutoff)+'.sol', 'w') as f:
-	    f.write('%i\n' % (len(Sol_VC)))
-	    f.write(','.join([str(x[0]) for x in Sol_VC]))
+	with open('.\Result\\' + infile.split('.')[0] + '_bnb_'+str(cutoff)+'.sol', 'w') as f:
+	    f.write('%i\n' % (len(OpteVC)))
+	    f.write(','.join([str(x[0]) for x in OptVC]))
 
-	with open('.\Output\\' + inputfile.split('.')[0] + '_BnB_'+str(cutoff)+'.trace', 'w') as f:
+	with open('.\Result\\' + infile.split('.')[0] + '_bnb_'+str(cutoff)+'.trace', 'w') as f:
 	    for t in times:
 	        f.write('%.2f,%i\n' % ((t[1]),t[0]))
 
@@ -160,9 +149,9 @@ if __name__ == '__main__':
 	parser.add_argument('-seed',action='store',default=1000,type=int,required=False,help='Select Random Seed')
 	args=parser.parse_args()
 
+	graphFile = args.inst
 	algorithm = args.alg
-	graph_file = args.inst
-	output_dir = 'Output/'
-	cutoff = args.time
-	randSeed = args.seed
-	main(graph_file, output_dir, cutoff, randSeed)
+	output_dir = 'Result/'
+	rSeed = args.seed
+	cutoffTime = args.time
+	main(graphFile, output_dir, cutoffTime, rSeed)
