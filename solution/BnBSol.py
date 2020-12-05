@@ -3,20 +3,6 @@ from solution.solution import Solution
 import networkx as nx
 import operator
 
-""" 
-Steps:
-1. choose node vi by the rank of degrees, append (vi,state=1) and (vi,state=0) to candiate list
-2. If state=1, remove the node from the original graph. If state=0, remove from original graph, and add all neighbors into list.
-3. Check the original graph. 
--If there's no egdes left in the original graph: 
-    - if current VC is less than the optimal VC, make it to new optimal.
-    - else #backtrack
--If there are edges left:
-    - If lowerbound if greater than upperbound, pruning from the original graph, #backtrack. 
-    - If lowerbound<upperbound, append next max degree node.
-4. BackTracking
-"""
-
 class BnBSol(Solution):
     def __init__(self, graph, randomSeed, startTime, parameterDict):
         super().__init__(graph, randomSeed, startTime)
@@ -25,85 +11,72 @@ class BnBSol(Solution):
     # override parent method
     def run(self):
         # Initialize 
-        g = self.graph
-        optVC=[] #optimal vertex cover to return
-        curVC=[] #current VC found
-        lists = []#set of candidate for subProblem
-        neighbor =[]
-        backtracking = False
-        #set the upperbound first
-        upperBound = g.number_of_nodes()
-        print('Initial UpperBound',upperBound)
+        G = self.graph
 
-        curG = g.copy() #initial CurG  before any removement
-        v = findMaxDegree(curG)
+	    print('Initial Global Upper Bound:', G.number_of_nodes())
+	    leftG = G.copy() #frist with entire graph
 
-        #add initial values to the stack
-        #tuples of node,state,(parent vertex,parent vertex state)
-        # State: 0 is not in the VC, 1 is in the VC
-        lists.append((v[0],0,(-1,-1)))
-        lists.append((v[0],0,(-1,-1)))
-        #print(lists)
+        optVC = []
+        CurVC = []
+        Frontier = []
+        expand = []
+        v = maxDeg(leftG)
 
-        #dfs
-        while lists !=[]:
-            (vi,state,parent)=lists.pop()
-            print("in dfs ==0 ")
-            if state == 0:  # if vi is not selected, state of all neighbors=1
-                neighbor = curG.neighbors(vi)  # store all neighbors of vi
-                for node in lists(neighbor):
-                    curVC.append((node, 1))
-                    curG.remomve_node(node)
-            elif state==1:
-                CurG.remomve_node(vi)
+        Frontier.append((v[0], 0, (-1, -1)))
+        Frontier.append((v[0], 1, (-1, -1)))
+
+        bk = False
+        while Frontier!=[] and timeBlock<T:
+            bk = False
+            (vi, state, src) = Frontier.pop()
+            if state == 1:
+                leftG.remove_node(vi)
+            elif state == 0:
+                expand = leftG.neighbors(vi)
+                for node in list(expand):
+                    leftG.remove_node(node)
+                    CurVC.append((node, 1))
+                    
             else:
                 pass
-            
-            
-            curVC.append((vi, state))
-            curVC_size = VC_Size(curVC)
 
-            #check solutions:
-            if curG.number_of_edges() == 0:  # end of exploring, solution found
-                if curVC_size < upperBound:
-                    optVC = curVC.copy()
-                    #print('Curr Vertex Cover Size', curVC_size)
-                    upperBound = curVC_size
-                backtracking=True
-                
+            CurVC.append((vi, state))
+            curSize = VCsize(CurVC)
+
+            if leftG.number_of_edges() == 0:
+                if VCsize(CurVC) < UpperBound:
+                    optVC = CurVC.copy()
+                    UpperBound = VCsize(CurVC)
+                    print('Current Opt VC size', curSize)
+                    times.append((curSize,time.time()-start))
+                bk = True
+                    
             else:
-                    curLB = Lowerbound(curG) + curVC_size
-                    if curLB < upperBound:  # worth exploring
-                        vj = find_maxdeg(curG)
-                        lists.append((vj[0], 0, (vi, state)))#(vi,state) is parent of vj
-                        lists.append((vj[0], 1, (vi, state)))
-                    else:
-                        #backtrack
-                        backtracking=True
+                if Lowerbound(leftG) + curSize < UpperBound:
+                    vii = maxDeg(leftG)
+                    Frontier.append((vii[0], 0, (vi, state)))
+                    Frontier.append((vii[0], 1, (vi, state)))
+                else:
+                    bk=True
 
-            if backtracking==True:
-            	if lists != []:	#otherwise no more candidates to process
-                    nextnode_parent = lists[-1][2]	#parent of last element in Frontier (tuple of (vertex,state))
-                    if nextnode_parent in curVC:
-                        id = curVC.index(nextnode_parent) + 1
-                        while id < len(curVC):	#undo changes from end of CurVC back up to parent node
-                            mynode, mystate = curVC.pop()	#undo the addition to CurVC
-                            curG.add_node(mynode)	#undo the deletion from CurG
-                            
-                            # find all the edges connected to vi in Graph G
-                            # or the edges that connected to the nodes that not in current VC set.
-                            
-                            curVC_nodes = list(map(lambda t:t[0], curVC))
-                            for nd in g.neighbors(mynode):
-                                if (nd in curG.nodes()) and (nd not in curVC_nodes):
-                                    curG.add_edge(nd, mynode)	#this adds edges of vi back to CurG that were possibly deleted
+            if bk==True:
+                if Frontier != []:
+                    nodeParent = Frontier[-1][2]
+                    if nodeParent in CurVC:
+                        id = CurVC.index(nodeParent) + 1
+                        while id < len(CurVC):
+                            nodei, statei = CurVC.pop()
+                            curNodes = list(map(lambda t:t[0], CurVC))
+                            leftG.add_node(nodei)
+                            for ndi in G.neighbors(nodei):
+                                if (ndi in leftG.nodes()) and (ndi not in curNodes):
+                                    leftG.add_edge(ndi, nodei)
 
-                    elif nextnode_parent == (-1, -1):
-                        # backtrack to the root node
-                        curVC.clear()
-                        curG = g.copy()
+                    elif nodeParent == (-1, -1):
+                        leftG = G.copy()
+                        CurVC.clear()
                     else:
-                        print('error in backtracking step')
+                        print('Backtracking Error')
         #return opt
         ################################################
         self.updateVertexSet(optVC)
@@ -111,16 +84,19 @@ class BnBSol(Solution):
         #time.sleep(1)
     
     def Lowerbound(graph):
-	    return graph.number_of_edges() / find_maxdeg(graph)[1]
+	    lb=graph.number_of_edges() / maxDdeg(graph)[1]
+	    if(lb> int(lb)):
+		    return int(lb)+1
+	    else:
+		    return int(lb)	    
 
-    def VC_Size(vc):
-        vc_size = 0
-        for element in vc:
-            vc_size = vc_size + element[1]
-        return vc_size
+    def VCsize(vc):
+        size = 0
+	    for element in VC:
+            size = size + element[1]
+	    return size
 
-    def findMaxDegree(g):#Sort the vertices with max degree in desc order
-        degrees = g.degree()
-        sorted = sorted(degrees.items(),reverse=True,key=operator.itemgetter(1))
-        v= sorted[0]
-        return v
+    def maxDeg(g):#Sort the vertices with max degree in desc order
+         deglist_sorted=sorted(g.degree,key = lambda x:x[1],reverse=True)
+         v = deglist_sorted[0]
+         return v   

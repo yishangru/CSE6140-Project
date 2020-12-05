@@ -35,7 +35,7 @@ def main():
     parser.add_argument('-inst', type=str, required=True,
                         help="graph data path")
     parser.add_argument('-alg', type=str, required=True,
-                        help="algorithm [BnB|Approx|ApproxUpdate|LS1|LS2|NetworkX]")
+                        help="algorithm [BnB|Approx|ApproxNoUpdate|LS1|LS2|NetworkX]")
     parser.add_argument('-time', type=int, default=600,
                         help="time limit for algorithm run, default 600")
     parser.add_argument('-seed', type=int, default=123,
@@ -143,9 +143,10 @@ def run(args, params, graph_path, write_dir):
     for solution in range(1, len(retrieved_sols)):
         if len(retrieved_sols[solution][0]) < len(current_best[0]):
             current_best = retrieved_sols[solution]
-    # TODO: Change file name for BnB
-    write_result_path = os.path.join(write_dir, params["graph_name"] + "_" + args.alg + "_"
-                                     + str(args.time) + (("_" + str(args.seed)) if not (args.seed == -1) else ""))
+    # Change file name for BnB
+    file_name = params["graph_name"] + "_" + args.alg + "_" + str(args.time) + \
+                (("_" + str(args.seed)) if not (args.alg == "BnB") else "")
+    write_result_path = os.path.join(write_dir, file_name)
     # write vertex set
     writeSol(writePath=write_result_path + ".sol", vertexSet=current_best[0])
     # write trace
