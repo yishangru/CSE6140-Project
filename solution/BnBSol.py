@@ -10,11 +10,13 @@ class BnBSol(Solution):
 
     # override parent method
     def run(self):
-        # Initialize 
-        G = self.graph
-
-	    print('Initial Global Upper Bound:', G.number_of_nodes())
-	    leftG = G.copy() #frist with entire graph
+	 # Initialize 
+        adjacent_matrix = self.graph.adjacent_matrix
+        G = nx.parse_adjlist(adjacent_matrix,nodetype = int)
+        print('nodes',G.nodes())
+        print("edges",G.edges())
+	print('Initial Global Upper Bound:', G.number_of_nodes())
+	leftG = G.copy() #frist with entire graph
 
         optVC = []
         CurVC = []
