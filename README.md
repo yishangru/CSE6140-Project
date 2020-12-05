@@ -7,7 +7,7 @@ The Minimum Vertex Cover (**MVC**) problem is a typical NP-complete problem that
 in many practical applications such as operation research, network security, computational biology and parallel machine scheduling. 
 In this project, four algorithms, i.e. Branch-and-Bound (BnB), Max Degree Greedy Approximation, 
 Two Weighting Local Search (Cai, Shaowei, etc. AAAI'15), Simulated Annealing Local Search are implemented to obtain the minimum vertex cover (MVC). 
-A dummy solution using **NetworkX** is also included in this project for reference. Please refer to ``/doc/ProjectDescription.pdf`` and ``/doc/report.pdf`` for project details.
+A dummy solution using **NetworkX** is also included in this project for reference. Please refer to ``/doc/ProjectDescription.pdf`` and ``/doc/11.pdf`` for project details.
 
 ## Install Python Dependencies for Local Running
 This project use Python 3+ (3.7.4 for implementation). We recommend to use python virtual environment to avoid possible dependency conflicts.

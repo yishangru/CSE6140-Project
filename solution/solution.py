@@ -67,11 +67,13 @@ def solutionExecutor(graph, solution, timeLimit, randomSeed, parameterDict, star
     from solution.approxSol import ApproxSol, ApproxNoUpdateSol
     from solution.twSearchSol import TWSearchSol
     from solution.simulatedAnnealing import SimulatedAnnealing
-    from solution.BnBSol import BnBSol
+    # from solution.BnBSol import BnBSol
     # graph is a deep copy, thread-safe to change
     if solution == "BnB":
-        solution_thread = BnBSol(graph=graph, randomSeed=randomSeed, startTime=startTime,
-                                 parameterDict=parameterDict)
+        print("Please refer to readme for BNB execution!!!")
+        raise RuntimeError
+        #solution_thread = BnBSol(graph=graph, randomSeed=randomSeed, startTime=startTime,
+        #                         parameterDict=parameterDict)
     elif solution == "LS1":
         solution_thread = TWSearchSol(graph=graph, randomSeed=randomSeed, startTime=startTime,
                                       parameterDict=parameterDict)

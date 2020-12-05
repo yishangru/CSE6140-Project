@@ -8,7 +8,7 @@ import multiprocessing
 from solution.solution import solutionExecutor
 from utils.data import checkData, readData, checkSol, writeSol, writeTrace
 
-DEBUG = True
+DEBUG = False
 defaultProcessNum = 1
 graphDataDirectory = "./data/Data"
 debugResultDirectory = "./result"  # writing directory when DEBUG

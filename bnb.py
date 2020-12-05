@@ -22,18 +22,20 @@ def parse(datafile):
 			graph.add_edge(i + 1, j)
 	return graph
 
-def Lowerbound(graph):
-	lb=graph.number_of_edges() / maxDdeg(graph)[1]
-	if(lb> int(lb)):
-		return int(lb)+1
-	else:
-		return int(lb)
 
 def maxDeg(g):
     deglist_sorted=sorted(g.degree,key = lambda x:x[1],reverse=True)
     v = deglist_sorted[0]
     return v
-    
+
+
+def Lowerbound(graph):
+	lb=graph.number_of_edges() / maxDeg(graph)[1]
+	if(lb> int(lb)):
+		return int(lb)+1
+	else:
+		return int(lb)
+
 
 def VCsize(VC):
 	size = 0
@@ -56,6 +58,7 @@ def bnb(G, T):
 	Frontier = []
 	expand = []
 	v = maxDeg(leftG)
+	UpperBound = G.number_of_nodes()
 
 	Frontier.append((v[0], 0, (-1, -1)))
 	Frontier.append((v[0], 1, (-1, -1)))
@@ -134,13 +137,13 @@ def main(inputfile, output_dir, cutoff, randSeed):
 			
 	indir, infile = os.path.split(args.inst)
 
-	with open('.\result\\' + infile.split('.')[0] + '_bnb_'+str(cutoff)+'.sol', 'w') as f:
-	    f.write('%i\n' % (len(OpteVC)))
-	    f.write(','.join([str(x[0]) for x in OptVC]))
+	with open(os.path.join(output_dir, infile.split('.')[0] + '_bnb_'+str(cutoff)+'.sol'), 'w') as f:
+		f.write('%i\n' % (len(OptVC)))
+		f.write(','.join([str(x[0]) for x in OptVC]))
 
-	with open('.\result\\' + infile.split('.')[0] + '_bnb_'+str(cutoff)+'.trace', 'w') as f:
-	    for t in times:
-	        f.write('%.2f,%i\n' % ((t[1]),t[0]))
+	with open(os.path.join(output_dir, infile.split('.')[0] + '_bnb_'+str(cutoff)+'.trace'), 'w') as f:
+		for t in times:
+			f.write('%.2f,%i\n' % ((t[1]),t[0]))
 
 if __name__ == '__main__':
 	parser=argparse.ArgumentParser(description='Input parser for BnB')
@@ -152,7 +155,7 @@ if __name__ == '__main__':
 
 	graphFile = args.inst
 	algorithm = args.alg
-	output_dir = 'result/'
+	output_dir = '.'
 	rSeed = args.seed
 	cutoffTime = args.time
 	main(graphFile, output_dir, cutoffTime, rSeed)
