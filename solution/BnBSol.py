@@ -11,10 +11,14 @@ class BnBSol(Solution):
     # override parent method
     def run(self):
 	 # Initialize 
-        adjacent_matrix = self.graph.adjacent_matrix
-        G = nx.parse_adjlist(adjacent_matrix,nodetype = int)
+	adjacent_matrix = self.graph.adjacent_matrix
+        list =[]
+        for node in adjacent_matrix.keys():
+            list[node]= ' '.join(adjacent_matrix.get(node))
+        G = nx.parse_adjlist(list,nodetype = int)
         print('nodes',G.nodes())
         print("edges",G.edges())
+ 
 	print('Initial Global Upper Bound:', G.number_of_nodes())
 	leftG = G.copy() #frist with entire graph
 
