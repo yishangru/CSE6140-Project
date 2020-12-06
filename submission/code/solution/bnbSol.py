@@ -12,18 +12,6 @@ class BnBSol(Solution):
 
     # override parent method
     def run(self):
-        adjacent_matrix = self.graph.adjacent_matrix
-
-        self.edge_number_mapping = dict()
-        for node in adjacent_matrix.keys():
-            self.edge_number_mapping[node] = len(adjacent_matrix[node])
-
-        self.optimal_cover_size = float("inf")
-        self.search()
-
-    def search(self):
-        cover_edge, current_sol = 0, set()
-
         def add_node(stack, node, cover):
             state_dict = {
                 "node": node,
@@ -32,7 +20,15 @@ class BnBSol(Solution):
             }
             stack.append(state_dict)
 
-        visit_stack = list()
+        adjacent_matrix = self.graph.adjacent_matrix
+
+        self.optimal_cover_size = float("inf")
+
+        self.edge_number_mapping = dict()
+        for node in adjacent_matrix.keys():
+            self.edge_number_mapping[node] = len(adjacent_matrix[node])
+
+        cover_edge, current_sol, visit_stack = 0, set(), list()
         start_node = max(self.edge_number_mapping.keys(), key=(lambda k: self.edge_number_mapping[k]))
         add_node(visit_stack, start_node, cover_edge)
 
@@ -61,7 +57,8 @@ class BnBSol(Solution):
                     continue
 
                 current_node_dict["state"] = 1
-                lower_bound, add_list, update_cover_edge = self.calculate_lb(current_sol, current_node_dict["node"], current_node_dict["cover"], True)
+                lower_bound, add_list, update_cover_edge = self.calculate_lb(current_sol, current_node_dict["node"],
+                                                                             current_node_dict["cover"], True)
                 current_node_dict["append"] = add_list
                 if lower_bound < self.optimal_cover_size:
                     max_degree_node = max(self.edge_number_mapping.keys(), key=(lambda k: self.edge_number_mapping[k]))
@@ -73,7 +70,8 @@ class BnBSol(Solution):
                 for node in current_node_dict["append"]:
                     self.restore(current_sol, node)
                 current_node_dict["state"] = 2
-                lower_bound, add_list, update_cover_edge = self.calculate_lb(current_sol, current_node_dict["node"], current_node_dict["cover"], False)
+                lower_bound, add_list, update_cover_edge = self.calculate_lb(current_sol, current_node_dict["node"],
+                                                                             current_node_dict["cover"], False)
                 current_node_dict["append"] = add_list
                 if lower_bound < self.optimal_cover_size:
                     max_degree_node = max(self.edge_number_mapping.keys(), key=(lambda k: self.edge_number_mapping[k]))
