@@ -67,16 +67,18 @@ class BnBSol(Solution):
             self.search(pointer + 1, current_sol, search_order, covered_edge)
             return
 
-        # not include node
-        lower_bound, update_cover_edge, add_list = self.extend(current_sol, search_order[pointer], covered_edge, False)
+        # include node
+        lower_bound, update_cover_edge, add_list = self.extend(current_sol, search_order[pointer], covered_edge, True)
         if lower_bound < self.optimal_cover_size:
+            # print("Add - " + str(pointer))
             self.search(pointer + 1, current_sol, search_order, update_cover_edge)
         for node in add_list:
             current_sol.remove(node)
 
-        # include node
-        lower_bound, update_cover_edge, add_list = self.extend(current_sol, search_order[pointer], covered_edge, True)
+        # not include node
+        lower_bound, update_cover_edge, add_list = self.extend(current_sol, search_order[pointer], covered_edge, False)
         if lower_bound < self.optimal_cover_size:
+            # print("Exclude - " + str(pointer))
             self.search(pointer + 1, current_sol, search_order, update_cover_edge)
         for node in add_list:
             current_sol.remove(node)
