@@ -12,7 +12,6 @@ class BnBSol(Solution):
 
     # override parent method
     def run(self):
-
         def add_node(stack, node, cover):
             state_dict = {
                 "node": node,
@@ -41,6 +40,7 @@ class BnBSol(Solution):
                 if "append" in current_node_dict.keys():
                     for node in current_node_dict["append"]:
                         self.restore(current_sol, node)
+                print(str(current_node_dict["cover"]) + " --- " + str(len(visit_stack)))
                 visit_stack.pop(-1)
                 continue
 
