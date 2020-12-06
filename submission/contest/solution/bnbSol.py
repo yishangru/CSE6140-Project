@@ -18,7 +18,7 @@ class BnBSol(Solution):
 
         self.updateSolution(self.greedy())
         self.optimal_cover_size = self.getVCSize()
-        sys.setrecursionlimit(self.optimal_cover_size + 1)
+        sys.setrecursionlimit(max(self.optimal_cover_size + 1, 1500))
 
         # adjacent matrix will be updated
         pointer, current_sol = 0, set()
