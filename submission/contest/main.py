@@ -36,7 +36,7 @@ def main():
     parser.add_argument('-inst', type=str, required=True,
                         help="graph data path")
     parser.add_argument('-alg', type=str, required=True,
-                        help="algorithm [BnB|Approx|ApproxNoUpdate|LS1|LS2|NetworkX]")
+                        help="algorithm [BnB|LS]")
     parser.add_argument('-time', type=int, default=600,
                         help="time limit for algorithm run, default 600")
     parser.add_argument('-seed', type=int, default=123,

@@ -63,30 +63,14 @@ Generate another thread:
 
 def solutionExecutor(graph, solution, timeLimit, randomSeed, parameterDict, startTime):
 
-    from solution.networkXSol import NetworkXSol
-    from solution.approxSol import ApproxSol, ApproxNoUpdateSol
     from solution.twSearchSol import TWSearchSol
-    from solution.simulatedAnnealing import SimulatedAnnealing
     from solution.bnbSol import BnBSol
     # graph is a deep copy, thread-safe to change
     if solution == "BnB":
         solution_thread = BnBSol(graph=graph, randomSeed=randomSeed, startTime=startTime,
                                  parameterDict=parameterDict)
-    elif solution == "LS1":
+    elif solution == "LS":
         solution_thread = TWSearchSol(graph=graph, randomSeed=randomSeed, startTime=startTime,
-                                      parameterDict=parameterDict)
-    elif solution == "LS2":
-        # LS2 for simulated annealing
-        solution_thread = SimulatedAnnealing(graph=graph, randomSeed=randomSeed, startTime=startTime,
-                                             parameterDict=parameterDict)
-    elif solution == "Approx":
-        solution_thread = ApproxSol(graph=graph, randomSeed=randomSeed, startTime=startTime,
-                                    parameterDict=parameterDict)
-    elif solution == "ApproxNoUpdate":
-        solution_thread = ApproxNoUpdateSol(graph=graph, randomSeed=randomSeed, startTime=startTime,
-                                            parameterDict=parameterDict)
-    elif solution == "NetworkX":
-        solution_thread = NetworkXSol(graph=graph, randomSeed=randomSeed, startTime=startTime,
                                       parameterDict=parameterDict)
     else:
         print("Not Implemented Solution! Check Arguments!")
