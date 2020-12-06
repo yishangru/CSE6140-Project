@@ -13,14 +13,18 @@ class BnBSol(Solution):
     # override parent method
     def run(self):
         adjacent_matrix = self.graph.adjacent_matrix
-        search_order = list(adjacent_matrix.keys())
-        search_order.sort(key=lambda x: len(adjacent_matrix[x]), reverse=True)
+        sort_node = sorted(list(adjacent_matrix.keys()), key=lambda x: len(adjacent_matrix[x]), reverse=True)
+        sys.setrecursionlimit(max(len(sort_node) + 1, 1500))
 
-        self.updateSolution(self.greedy())
-        self.optimal_cover_size = self.getVCSize()
-        sys.setrecursionlimit(max(self.optimal_cover_size + 1, 1500))
+        search_order = self.greedy()
+        search_check_set = set(search_order)
+        for node in sort_node:
+            if node not in search_check_set:
+                search_order.append(node)
+                search_check_set.add(node)
 
-        # adjacent matrix will be updated
+        self.optimal_cover_size = float("inf")
+
         pointer, current_sol = 0, set()
         self.search(pointer, current_sol, search_order, 0)
 
@@ -29,7 +33,7 @@ class BnBSol(Solution):
         # Max Degree Greedy Algorithm
         # Fran¸cois Delbot and Christian Laforest. Analytical and experimental comparison of six algorithms for the
         # vertex cover problem. Journal of Experimental Algorithmics (JEA), 15:1–4, 2010.
-        vc = set()
+        vc, vc_order = set(), list()
         adjacent_matrix = self.graph.adjacent_matrix
         current_edge = self.graph.edge
 
@@ -47,7 +51,8 @@ class BnBSol(Solution):
             current_edge -= edge_number_mapping[max_degree_node]
             edge_number_mapping.pop(max_degree_node)
             vc.add(max_degree_node)
-        return vc
+            vc_order.append(max_degree_node)
+        return vc_order
 
     def search(self, pointer, current_sol, search_order, covered_edge):
 
