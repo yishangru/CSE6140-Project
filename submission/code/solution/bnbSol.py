@@ -2,6 +2,7 @@
 This is a solution retrieved using Branch and Bound.
 """
 
+import math
 from solution.solution import Solution
 
 
@@ -17,6 +18,7 @@ class BnBSol(Solution):
                 "node": node,
                 "state": 0,
                 "cover": cover,
+                "append": list()
             }
             stack.append(state_dict)
 
@@ -28,19 +30,17 @@ class BnBSol(Solution):
         for node in adjacent_matrix.keys():
             self.edge_number_mapping[node] = len(adjacent_matrix[node])
 
-        cover_edge, current_sol, visit_stack = 0, set(), list()
+        current_sol, visit_stack = set(), list()
         start_node = max(self.edge_number_mapping.keys(), key=(lambda k: self.edge_number_mapping[k]))
-        add_node(visit_stack, start_node, cover_edge)
+        add_node(visit_stack, start_node, 0)
 
         while len(visit_stack) > 0:
             current_node_dict = visit_stack[-1]
 
             # restore state
             if current_node_dict["state"] == 2:
-                if "append" in current_node_dict.keys():
-                    for node in current_node_dict["append"]:
-                        self.restore(current_sol, node)
-                print(str(current_node_dict["cover"]) + " --- " + str(len(visit_stack)))
+                self.restore(current_sol, current_node_dict["append"])
+                # print(str(current_node_dict["cover"]) + " --- " + str(len(visit_stack)))
                 visit_stack.pop(-1)
                 continue
 
@@ -54,63 +54,61 @@ class BnBSol(Solution):
                     if len(current_sol) < self.optimal_cover_size:
                         self.updateSolution(current_sol)
                         self.optimal_cover_size = self.getVCSize()
+                        if self.optimal_cover_size == self.parameterDict["opt"]:
+                            print("Find optimal!")
+                            break
+                    current_node_dict["state"] = 2
+                    continue
+
+                if self.edge_number_mapping[current_node_dict["node"]] == 0:
                     current_node_dict["state"] = 2
                     continue
 
                 current_node_dict["state"] = 1
-                lower_bound, add_list, update_cover_edge = self.calculate_lb(current_sol, current_node_dict["node"],
-                                                                             current_node_dict["cover"], True)
-                current_node_dict["append"] = add_list
+                lower_bound = self.calculate_lb(current_sol, current_node_dict["node"], current_node_dict["cover"], True)
                 if lower_bound < self.optimal_cover_size:
+                    current_node_dict["append"].append(current_node_dict["node"])
+                    update_cover_edge = self.extend(current_sol, current_node_dict["append"], current_node_dict["cover"])
                     max_degree_node = max(self.edge_number_mapping.keys(), key=(lambda k: self.edge_number_mapping[k]))
                     add_node(visit_stack, max_degree_node, update_cover_edge)
                 continue
 
             # search not include node
             if current_node_dict["state"] == 1:
-                for node in current_node_dict["append"]:
-                    self.restore(current_sol, node)
+                self.restore(current_sol, current_node_dict["append"])
+                current_node_dict["append"].clear()
+
                 current_node_dict["state"] = 2
-                lower_bound, add_list, update_cover_edge = self.calculate_lb(current_sol, current_node_dict["node"],
-                                                                             current_node_dict["cover"], False)
-                current_node_dict["append"] = add_list
+                lower_bound = self.calculate_lb(current_sol, current_node_dict["node"], current_node_dict["cover"], False)
                 if lower_bound < self.optimal_cover_size:
+                    for neighbor in adjacent_matrix[current_node_dict["node"]]:
+                        if neighbor not in current_sol:
+                            current_node_dict["append"].append(neighbor)
+                    update_cover_edge = self.extend(current_sol, current_node_dict["append"], current_node_dict["cover"])
                     max_degree_node = max(self.edge_number_mapping.keys(), key=(lambda k: self.edge_number_mapping[k]))
                     add_node(visit_stack, max_degree_node, update_cover_edge)
                 continue
 
-    def calculate_lb(self, current_sol, search_node, covered_edge, include):
-        add_list = list()
-        if include:
-            lower_bound = len(current_sol) + 1
-            if lower_bound < self.optimal_cover_size:
-                add_list.append(search_node)
-        else:
-            adjacent_matrix = self.graph.adjacent_matrix
-            lower_bound = len(current_sol) + self.edge_number_mapping[search_node]
-            if lower_bound < self.optimal_cover_size:
-                for neighbor in adjacent_matrix[search_node]:
-                    if neighbor not in current_sol:
-                        add_list.append(neighbor)
+    def calculate_lb(self, current_sol, search_node, cover_edge, include):
+        return len(current_sol) + math.ceil((self.graph.edge - cover_edge) / self.edge_number_mapping[search_node]) \
+            if include else len(current_sol) + self.edge_number_mapping[search_node]
 
-        for node in add_list:
-            covered_edge = self.extend(current_sol, node, covered_edge)
-        return lower_bound, add_list, covered_edge
-
-    def extend(self, current_sol, search_node, covered_edge):
+    def extend(self, current_sol, add_node_list, covered_edge):
         adjacent_matrix = self.graph.adjacent_matrix
-        for neighbor in adjacent_matrix[search_node]:
-            if neighbor not in current_sol:
-                self.edge_number_mapping[neighbor] -= 1
-        covered_edge += self.edge_number_mapping[search_node]
-        self.edge_number_mapping[search_node] = 0
-        current_sol.add(search_node)
+        for node in add_node_list:
+            for neighbor in adjacent_matrix[node]:
+                if neighbor not in current_sol:
+                    self.edge_number_mapping[neighbor] -= 1
+            covered_edge += self.edge_number_mapping[node]
+            self.edge_number_mapping[node] = 0
+            current_sol.add(node)
         return covered_edge
 
-    def restore(self, current_sol, search_node):
+    def restore(self, current_sol, add_node_list):
         adjacent_matrix = self.graph.adjacent_matrix
-        for neighbor in adjacent_matrix[search_node]:
-            if neighbor not in current_sol:
-                self.edge_number_mapping[neighbor] += 1
-                self.edge_number_mapping[search_node] += 1
-        current_sol.remove(search_node)
+        for node in add_node_list:
+            for neighbor in adjacent_matrix[node]:
+                if neighbor not in current_sol:
+                    self.edge_number_mapping[neighbor] += 1
+                    self.edge_number_mapping[node] += 1
+            current_sol.remove(node)
