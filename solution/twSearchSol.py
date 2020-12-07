@@ -291,7 +291,7 @@ def mini_test_ls(graphPath):
                                      "opt": optimalVC[graph_instance] if graph_instance in optimalVC.keys() else -1})
     sol.run()
 
-dataDir = "../data/Data"
+dataDir = "../data/DATA"
 graph_file_list = os.listdir(dataDir)
 for graph in graph_file_list:
     split_name = graph.split(".")
