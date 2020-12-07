@@ -60,10 +60,6 @@ class BnBSol(Solution):
                     current_node_dict["state"] = 2
                     continue
 
-                if self.edge_number_mapping[current_node_dict["node"]] == 0:
-                    current_node_dict["state"] = 2
-                    continue
-
                 current_node_dict["state"] = 1
                 lower_bound = self.calculate_lb(current_sol, current_node_dict["node"], current_node_dict["cover"], True)
                 if lower_bound < self.optimal_cover_size:
