@@ -8,11 +8,12 @@ sys.path.remove(os.path.abspath("."))
 
 from utils.data import readData
 
-graphDirectory = "../data/Data"
+graphDirectory = "../../data/Data"
 
 sample_ratio_dict = {
     "delaunay_n10.graph": 0.5,
     "email.graph": 0.5,
+    "netscience.graph": 0.5,
     "power.graph": 0.2,
     "hep-th.graph": 0.15,
     "as-22july06.graph": 0.1,
@@ -28,6 +29,7 @@ layout_dict = {
     "star.graph": "kamada",
     "star2.graph": "kamada",
     "as-22july06.graph": "fruchterman",
+    "netscience.graph": "fruchterman"
 }
 
 def structureVisualization(graphName):
