@@ -280,7 +280,7 @@ def boxplot_runtime(graph_instance, alg, trace):
     # Create an axes instance
     ax = plt.gca()
 
-    labels = [str(round(100 * quality, 1)) for quality in quality_list]
+    labels = [str(round(100 * quality, 2)) for quality in quality_list]
 
     # add patch_artist=True option to ax.boxplot()
     bp = ax.boxplot(quality_result_list, patch_artist=True)
